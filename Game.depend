@@ -1,0 +1,121 @@
+# depslib dependency file v1.0
+1679044018 source:d:\napplee07\game\main.cpp
+	"defs.h"
+	"Game.cpp"
+
+1679070895 d:\napplee07\game\game.h
+	<SDL.h>
+	<SDL_image.h>
+	<SDL_ttf.h>
+	<SDL_mixer.h>
+	<list>
+	<chrono>
+	<random>
+	<time.h>
+	<string>
+	"Bird.h"
+	"Pipe.h"
+	"defs.h"
+
+1679044566 d:\napplee07\game\bird.h
+	<SDL.h>
+	<iostream>
+	<SDL_mixer.h>
+	"Pipe.h"
+	"defs.h"
+
+1679027830 d:\napplee07\game\pipe.h
+	<SDL.h>
+	"defs.h"
+
+1679027717 d:\napplee07\game\defs.h
+
+1679044602 d:\napplee07\game\bird.cpp
+	"Bird.h"
+	<bits/stdc++.h>
+
+1679046485 d:\napplee07\game\game.cpp
+	"Game.h"
+	"Bird.cpp"
+	<bits/stdc++.h>
+
+1680633549 source:e:\download\ltnc-22028147-main\game\main.cpp
+	"Commonfuntion.h"
+	"Game.cpp"
+
+1680607560 e:\download\ltnc-22028147-main\game\defs.h
+
+1680633439 e:\download\ltnc-22028147-main\game\game.cpp
+	"Game.h"
+	"Bird.cpp"
+	<bits/stdc++.h>
+
+1680633538 e:\download\ltnc-22028147-main\game\game.h
+	"Bird.h"
+	"Pipe.h"
+	"Commonfuntion.h"
+
+1680634384 e:\download\ltnc-22028147-main\game\bird.h
+	<SDL.h>
+	<iostream>
+	<SDL_mixer.h>
+	"Pipe.h"
+	"Commonfuntion.h"
+
+1680607886 e:\download\ltnc-22028147-main\game\pipe.h
+	<SDL.h>
+	"Commonfuntion.h"
+
+1679071484 e:\download\ltnc-22028147-main\game\bird.cpp
+	"Bird.h"
+	<bits/stdc++.h>
+
+1680633147 e:\download\ltnc-22028147-main\game\commonfuntion.h
+	<SDL.h>
+	<SDL_image.h>
+	<SDL_ttf.h>
+	<SDL_mixer.h>
+	<list>
+	<chrono>
+	<random>
+	<time.h>
+	<string>
+	<fstream>
+
+1680634118 source:e:\download\ltnc-22028147-main\game\baseobject.cpp
+	"Bird.h"
+	"Pipe.h"
+	"Commonfuntion.h"
+
+1680634118 source:e:\download\bach\game\baseobject.cpp
+	"Bird.h"
+	"Pipe.h"
+	"Commonfuntion.h"
+
+1680634384 e:\download\bach\game\bird.h
+	<SDL.h>
+	<iostream>
+	<SDL_mixer.h>
+	"Pipe.h"
+	"Commonfuntion.h"
+
+1680607886 e:\download\bach\game\pipe.h
+	<SDL.h>
+	"Commonfuntion.h"
+
+1680633147 e:\download\bach\game\commonfuntion.h
+	<SDL.h>
+	<SDL_image.h>
+	<SDL_ttf.h>
+	<SDL_mixer.h>
+	<list>
+	<chrono>
+	<random>
+	<time.h>
+	<string>
+	<fstream>
+
+1680633549 source:e:\download\bach\game\main.cpp
+	"Commonfuntion.h"
+	"Game.cpp"
+
