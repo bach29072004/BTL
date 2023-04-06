@@ -1,69 +1,62 @@
-#ifndef GAME_H_INCLUDED
-#define GAME_H_INCLUDED
+#ifndef COMMONFUNTION_H_INCLUDED
+#define COMMONFUNTION_H_INCLUDED
 
-
+#include "CommonFuntion.h"
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_mixer.h>
+#include <SDL_ttf.h>
 #include "Bird.h"
-#include "Pipe.h"
-#include "Commonfuntion.h"
 
 class BaseObject
 {
     public:
-
+        int PlayMusic = 0;
+        bool MusicFirstTime = true;
+        int MusicTMP = 0;
+        Mix_Chunk* Music = Mix_LoadWAV("fly.wav");
+        Mix_Music* DeadSound = Mix_LoadMUS("crash.wav");
+        Mix_Chunk* BackGroundSound = Mix_LoadWAV("nhacnen.mp3");
         int score;
-        TTF_Font* font = TTF_OpenFont("font.ttf", 25);
-        SDL_Color White = {255, 255, 255};
+        TTF_Font* Font = TTF_OpenFont("font.ttf", 30);
+        SDL_Color Color = {255, 255, 255};
         int high_score = 0;
+        SDL_Texture *Texture_Backround;
+        SDL_Texture *Texture_Ground;
+        SDL_Texture *Texture_bird_UP;
+        SDL_Texture *Texture_bird_MID;
+        SDL_Texture *Texture_bird_DOWN;
+        SDL_Texture *Texture_Pipe;
+        SDL_Texture *Texture_Number[10];
+        SDL_Texture *Texture_Gameover;
 
-        int numberPlayMusic = 0;
-        bool firstTime = true;
-        int tmpMusic = 0;
-        Mix_Chunk* music = Mix_LoadWAV("fly.wav");
-        Mix_Music* deadSound = Mix_LoadMUS("crash.wav");
-        Mix_Chunk* backgroundSound = Mix_LoadWAV("nhacnen.mp3");
-
-
-        SDL_Texture *texture_background;
-        SDL_Texture *texture_ground;
-        SDL_Texture *texture_pipe;
-        SDL_Texture *texture_numbers[20];
-        SDL_Texture *texture_gameover;
-        SDL_Texture *texture_bird_Up;
-        SDL_Texture *texture_bird_Mid;
-        SDL_Texture *texture_bird_Down;
-
-
-        bool Running;
+        bool Run;
 
         BaseObject(const char *title, int _width, int _height);
 
         void Start();
-        void Close();
         void update(bool jump, float elapsedTime, bool &gameover);
         void render();
         void gameOver();
         void init();
         void renderHighScore();
-        void SaveHighScore();
+       void Close();
+       void SaveHightScore();
+       void RenderOldScore();
 
     private:
-        SDL_Renderer *grenderer;
-        SDL_Window *gwindow;
-
-        SDL_Event event;
 
         Bird *bird;
 
         std::list<Pipe*> pipes;
 
-        int ground1, ground2;
+        int groundbot, groundtop;
 
-        bool gameStarted, gameover;
+        bool GameStarted, Gameover;
 
-        void loadTextures();
+        void LoadTexture();
 };
 
 
 
 #endif // GAME_H_INCLUDED
-

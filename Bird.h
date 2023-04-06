@@ -5,7 +5,7 @@
 #include <iostream>
 #include <SDL_mixer.h>
 #include "Pipe.h"
-#include "Commonfuntion.h"
+#include "CommonFuntion.h"
 
 class Bird
 {
@@ -15,28 +15,31 @@ class Bird
 
         SDL_Rect pos;
 
-        SDL_Texture *up;
-        SDL_Texture *down;
-        SDL_Texture *mid;
+        SDL_Texture *Bird_UP;
+        SDL_Texture *Bird_DOWN;
+        SDL_Texture *Bird_MID;
         SDL_Texture *CurrentRenderingTexture;
-        SDL_Renderer *renderer;
+        SDL_Renderer *Renderer;
 
         int Animation_Frames;
 
 
     public:
-        int score;
-        Mix_Chunk* scoreSound = Mix_LoadWAV("score.wav");
-        Bird(SDL_Texture *up, SDL_Texture *mid, SDL_Texture *down, SDL_Renderer *renderer);
-        int getScore()
-        {
-            return score;
-        }
-        void init();
+        int Score;
+        Mix_Chunk* ScoreSound = Mix_LoadWAV("score.wav");
+        Bird(SDL_Texture *Bird_UP, SDL_Texture *Bird_MID, SDL_Texture *Bird_DOWN, SDL_Renderer *Renderer);
+        void onit();
         void render();
         void update(bool jump, float elapsedTime);
         void animation();
-        bool collisionDetector(Pipe *pipe);
+        bool Collision(Pipe *pipe);
+        bool PassPipe(Pipe *pipe);
+         int GetScore()
+        {
+            return Score;
+        }
 };
 
 #endif // BIRD_H_INCLUDED
+
+
