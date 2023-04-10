@@ -10,7 +10,18 @@
 
 class BaseObject
 {
-    public:
+private:
+
+        Bird *bird;
+
+        std::list<Pipe*> pipes;
+
+        int groundbot, groundtop;
+
+        bool GameStarted, Gameover;
+
+        void LoadTexture();
+public:
         int PlayMusic = 0;
         bool MusicFirstTime = true;
         int MusicTMP = 0;
@@ -29,10 +40,11 @@ class BaseObject
         SDL_Texture *Texture_Pipe;
         SDL_Texture *Texture_Number[10];
         SDL_Texture *Texture_Gameover;
+        SDL_Texture *Texture_item;
 
         bool Run;
 
-        BaseObject(const char *title, int _width, int _height);
+        BaseObject();
 
         void Start();
         void update(bool jump, float elapsedTime, bool &gameover);
@@ -44,17 +56,7 @@ class BaseObject
        void SaveHightScore();
        void RenderOldScore();
 
-    private:
 
-        Bird *bird;
-
-        std::list<Pipe*> pipes;
-
-        int groundbot, groundtop;
-
-        bool GameStarted, Gameover;
-
-        void LoadTexture();
 };
 
 

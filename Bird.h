@@ -6,6 +6,7 @@
 #include <SDL_mixer.h>
 #include "Pipe.h"
 #include "CommonFuntion.h"
+#include "item.h"
 
 class Bird
 {
@@ -27,17 +28,18 @@ class Bird
     public:
         int Score;
         Mix_Chunk* ScoreSound = Mix_LoadWAV("score.wav");
+        Mix_Chunk * itemSound = Mix_LoadWAV("itemsound.wav");
         Bird(SDL_Texture *Bird_UP, SDL_Texture *Bird_MID, SDL_Texture *Bird_DOWN, SDL_Renderer *Renderer);
         void onit();
         void render();
         void update(bool jump, float elapsedTime);
         void animation();
-        bool Collision(Pipe *pipe);
-        bool PassPipe(Pipe *pipe);
+        bool CollisionPipe(Pipe *pipe);
          int GetScore()
         {
             return Score;
         }
+        bool Eatitem(item* item);
 };
 
 #endif // BIRD_H_INCLUDED

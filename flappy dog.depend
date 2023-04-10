@@ -1,18 +1,18 @@
 # depslib dependency file v1.0
-1680801326 source:e:\hoc code\flappy dog\bird.cpp
+1681122965 source:e:\hoc code\flappy dog\bird.cpp
 	"Bird.h"
 	<bits/stdc++.h>
 
 1680684245 source:e:\hoc code\flappy dog\commonfuntion.cpp
 
-1680801758 source:e:\hoc code\flappy dog\main.cpp
+1680835335 source:e:\hoc code\flappy dog\main.cpp
 	"CommonFuntion.h"
 	"BaseObject.h"
 
 1680801570 source:e:\hoc code\flappy dog\pipe.cpp
 	"Pipe.h"
 
-1680798269 e:\hoc code\flappy dog\commonfuntion.h
+1681119476 e:\hoc code\flappy dog\commonfuntion.h
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_mixer.h>
@@ -24,8 +24,9 @@
 	<time.h>
 	<string>
 	<bits/stdc++.h>
+	<fstream>
 
-1680801889 e:\hoc code\flappy dog\baseobject.h
+1681123094 e:\hoc code\flappy dog\baseobject.h
 	"CommonFuntion.h"
 	<SDL.h>
 	<SDL_image.h>
@@ -33,20 +34,21 @@
 	<SDL_ttf.h>
 	"Bird.h"
 
-1680801173 e:\hoc code\flappy dog\bird.h
+1681122970 e:\hoc code\flappy dog\bird.h
 	<SDL.h>
 	<iostream>
 	<SDL_mixer.h>
 	"Pipe.h"
 	"CommonFuntion.h"
+	"item.h"
 
-1680801585 e:\hoc code\flappy dog\pipe.h
+1681121873 e:\hoc code\flappy dog\pipe.h
 	<SDL.h>
 	"CommonFuntion.h"
 
-1680800857 source:e:\hoc code\flappy dog\baseobject.cpp
+1681118937 source:e:\hoc code\flappy dog\baseobject.cpp
 	"BaseObject.h"
-	"Bird.cpp"
+	"Bird.h"
 	"CommonFuntion.h"
 	"Pipe.h"
 
@@ -59,5 +61,9 @@
 	<iostream>
 	<SDL_mixer.h>
 	"Pipe.h"
+	"CommonFuntion.h"
+
+1681122236 e:\hoc code\flappy dog\item.h
+	<SDL.h>
 	"CommonFuntion.h"
 

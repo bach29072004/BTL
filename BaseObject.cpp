@@ -1,13 +1,13 @@
 #include "BaseObject.h"
-#include "Bird.cpp"
+#include "Bird.h"
 #include "CommonFuntion.h"
 #include "Pipe.h"
 
 
 using namespace std;
-BaseObject::BaseObject(const char *title, int width, int height)
+BaseObject::BaseObject()
 {
-    gwindow = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
+    gwindow = SDL_CreateWindow(Tiles, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
     grenderer = SDL_CreateRenderer(gwindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     LoadTexture();
@@ -41,20 +41,20 @@ void BaseObject::init()
 
 void BaseObject::renderHighScore(){
     string tmp = "High Score: " + to_string(high_score);
-    SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Font, tmp.c_str() , Color);
+    SDL_Surface* Surface_HightScore = TTF_RenderText_Solid(Font, tmp.c_str() , Color);
 
-    SDL_Texture* Message = SDL_CreateTextureFromSurface(grenderer, surfaceMessage);
+    SDL_Texture* High_core_mess = SDL_CreateTextureFromSurface(grenderer, Surface_HightScore);
 
-    SDL_Rect Message_rect;
-    Message_rect.x = 0;
-    Message_rect.y = 0;
-    Message_rect.w = surfaceMessage->w;
-    Message_rect.h = surfaceMessage->h;
+    SDL_Rect hight_score_rect;
+    hight_score_rect.x = 0;
+    hight_score_rect.y = 0;
+    hight_score_rect.w = Surface_HightScore->w;
+    hight_score_rect.h = Surface_HightScore->h;
 
-    SDL_RenderCopy(grenderer, Message, NULL, &Message_rect);
+    SDL_RenderCopy(grenderer, High_core_mess, NULL, &hight_score_rect);
     //cout << "D";
-    SDL_FreeSurface(surfaceMessage);
-    SDL_DestroyTexture(Message);
+    SDL_FreeSurface(Surface_HightScore);
+    SDL_DestroyTexture(High_core_mess);
 }
 
 void BaseObject::Start()
@@ -127,7 +127,7 @@ void BaseObject::update(bool jump, float elapsedTime, bool &gameover)
             pipes.push_back(new Pipe(pipes.back()->pipe_bottom_d.x + PIPE_DISTANCE, rand() % 301 + 150));
         }
 
-        if(bird->Collision(p))
+        if(bird->CollisionPipe(p))
             gameover = true;
     }
 
@@ -216,24 +216,25 @@ void BaseObject::render()
 
 void BaseObject::LoadTexture()
 {
-    Texture_Backround = IMG_LoadTexture(grenderer, "sprites/background-day.png");
-    Texture_Pipe = IMG_LoadTexture(grenderer, "sprites/pipe.png");
-    Texture_bird_MID = IMG_LoadTexture(grenderer, "sprites/yellowbird-midflap.png");
-    Texture_bird_UP = IMG_LoadTexture(grenderer, "sprites/yellowbird-upflap.png");
-    Texture_bird_DOWN = IMG_LoadTexture(grenderer, "sprites/yellowbird-downflap.png");
-    Texture_Ground = IMG_LoadTexture(grenderer, "sprites/base.png");
-    Texture_Gameover = IMG_LoadTexture(grenderer, "sprites/gameover.png");
+    Texture_Backround = IMG_LoadTexture(grenderer, "picture/background-day.png");
+    Texture_Pipe = IMG_LoadTexture(grenderer, "picture/pipe.png");
+    Texture_bird_MID = IMG_LoadTexture(grenderer, "picture/dog2.png");
+    Texture_bird_UP = IMG_LoadTexture(grenderer, "picture/dog3.png");
+    Texture_bird_DOWN = IMG_LoadTexture(grenderer, "picture/dog2.png");
+    Texture_Ground = IMG_LoadTexture(grenderer, "picture/base.png");
+    Texture_Gameover = IMG_LoadTexture(grenderer, "picture/gameover.png");
+    Texture_item = IMG_LoadTexture(grenderer, "picture/item.png");
 
 
     for(int i = 0; i < 10; i++)
     {
-        string path = "sprites/" + to_string(i) + ".png";
+        string path = "picture/" + to_string(i) + ".png";
         Texture_Number[i] = IMG_LoadTexture(grenderer, path.c_str());
     }
 }
-void SaveHightScore(){
+void BaseObject::SaveHightScore(){
        ofstream file_HightScore("hightscore.txt");
-       file_HightScore << Score;
+       file_HightScore << high_score;
 }
 void RenderOldScore()
 {

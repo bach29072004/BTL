@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
     Mix_Init(0);
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT,2,1024);
 
-    BaseObject game(Tiles, WIDTH, HEIGHT);
+    BaseObject game;
 
     game.Start();
 

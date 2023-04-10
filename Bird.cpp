@@ -41,7 +41,7 @@ void Bird::update(bool JUMP, float ElapsedTime)
     pos.y += Velocity * ElapsedTime;
 }
 
-bool Bird::Collision(Pipe *pipe)
+bool Bird::CollisionPipe(Pipe *pipe)
 {
        // Collision pipe
        if(pipe->pipe_top_d.x <= pos.x + pos.w && pipe->pipe_top_d.x + PIPE_WIDTH >= pos.x + pos.w)
@@ -55,10 +55,7 @@ bool Bird::Collision(Pipe *pipe)
        // Collision ceilling
        if(pos.y < 0)
               return true;
-        return false;
-}
-bool Bird::PassPipe(Pipe*pipe)
-{
+
        if(!pipe->passed_pipe && pipe->pipe_top_d.x + PIPE_WIDTH < pos.x)
        {
               pipe->passed_pipe = true;
@@ -66,6 +63,18 @@ bool Bird::PassPipe(Pipe*pipe)
               if(pipe->passed_pipe == true) Mix_PlayChannel(-1,ScoreSound,0);
        }
 
+       return false;
+}
+bool Bird::Eatitem(item* item)
+{
+       if(item->item_rect.x <= pos.x + pos.w && item->item_rect.x + ITEM_WIDTH >= pos.x + pos.w)
+              if(pos.y < item->item_rect.y + item->item_rect.h || pos.y + pos.h > item->item_rect.y)
+                     return true;
+       if(!item->eat_item )
+       {
+              item ->eat_item =true;
+              if(item->eat_item ==true) Mix_PlayChannel(-1, itemSound,0);
+       }
        return false;
 }
 
