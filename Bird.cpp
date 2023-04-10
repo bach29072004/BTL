@@ -21,7 +21,7 @@ Bird::Bird(SDL_Texture *Bird_UP, SDL_Texture *Bird_MID, SDL_Texture *Bird_DOWN, 
 {
     onit();
 }
-
+// bird jump
 void Bird::update(bool JUMP, float ElapsedTime)
 {
     ElapsedTime *= 5;
@@ -39,14 +39,16 @@ void Bird::update(bool JUMP, float ElapsedTime)
 
     Velocity += Acceleration * ElapsedTime;
     pos.y += Velocity * ElapsedTime;
+    if (item ->eat_item == true)
+              Velocity =0;
 }
-
+// collision
 bool Bird::CollisionPipe(Pipe *pipe)
 {
        // Collision pipe
        if(pipe->pipe_top_d.x <= pos.x + pos.w && pipe->pipe_top_d.x + PIPE_WIDTH >= pos.x + pos.w)
               if(pos.y < pipe->pipe_top_d.y + pipe->pipe_top_d.h || pos.y + pos.h > pipe->pipe_bottom_d.y)
-              return true;
+                     return true;
 
        // Collision ground
        if(pos.y + pos.h > HEIGHT - GROUND_HEIGHT)
@@ -65,6 +67,7 @@ bool Bird::CollisionPipe(Pipe *pipe)
 
        return false;
 }
+// eat item
 bool Bird::Eatitem(item* item)
 {
        if(item->item_rect.x <= pos.x + pos.w && item->item_rect.x + ITEM_WIDTH >= pos.x + pos.w)

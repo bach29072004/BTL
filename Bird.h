@@ -19,6 +19,7 @@ class Bird
         SDL_Texture *Bird_UP;
         SDL_Texture *Bird_DOWN;
         SDL_Texture *Bird_MID;
+        SDL_Texture * item_;
         SDL_Texture *CurrentRenderingTexture;
         SDL_Renderer *Renderer;
 

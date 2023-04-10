@@ -46,7 +46,7 @@
 	<SDL.h>
 	"CommonFuntion.h"
 
-1681118937 source:e:\hoc code\flappy dog\baseobject.cpp
+1681123255 source:e:\hoc code\flappy dog\baseobject.cpp
 	"BaseObject.h"
 	"Bird.h"
 	"CommonFuntion.h"
