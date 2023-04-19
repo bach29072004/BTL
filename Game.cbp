@@ -44,6 +44,7 @@
 		<Unit filename="Pipe.h">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
+		<Unit filename="item.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />

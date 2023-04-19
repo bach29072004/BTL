@@ -1,23 +1,25 @@
 #ifndef ITEM_H_INCLUDED
 #define ITEM_H_INCLUDED
+
 #include <SDL.h>
-#include "CommonFuntion.h"
+#include "Commonfuntion.h"
+
 struct item
 {
-       SDL_Rect item_rect;
+       SDL_Rect item_;
        bool eat_item;
+       item(int x , int y)
+       {
+              item_.x = x;
+              item_.y = y;
+              item_.w = ITEM_WIDTH;
+              item_.h = ITEM_HEIGHT;
 
-       item(int item_x, int item_y){
-              item_rect.x = item_x;
-              item_rect.y = item_y;
-              item_rect.w = ITEM_WIDTH;
-              item_rect.h = ITEM_HEIGHT;
               eat_item = false;
        }
-
-       void render(SDL_Renderer* render, SDL_Texture* texture)
+       void render_item(SDL_Renderer* render, SDL_Texture* texture)
        {
-              SDL_RenderCopy(render,texture,NULL , &item_rect);
+
+       SDL_RenderCopy(render , texture, NULL,item_);
        }
 };
-#endif // ITEM_H_INCLUDED
