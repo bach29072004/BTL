@@ -70,6 +70,7 @@ bool Bird::eat_item(item*_item){
                      return true;
               }
        }
+       return false;
 }
 void Bird::render()
 {

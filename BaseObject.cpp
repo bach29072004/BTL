@@ -28,10 +28,10 @@ void BaseOject::init()
        for(auto pipe : pipes)
               pipes.pop_front();
 
-       pipes.push_back(new Pipe(WIDTH * 2 + PIPE_DISTANCE, rand() % 301 + 150));
+       pipes.push_back(new Pipe(WIDTH * 2 + PIPE_DISTANCE, rand() % 301 + 150 ));
        pipes.push_back(new Pipe(pipes.back()->bottom_dst.x + PIPE_DISTANCE, rand() % 301 + 150));
        pipes.push_back(new Pipe(pipes.back()->bottom_dst.x + PIPE_DISTANCE, rand() % 301 + 150));
-
+       _item = new item(WIDTH * 2 + PIPE_DISTANCE,rand() % 301 + 150);
        gameStarted = false;
        gameover = false;
 
@@ -81,7 +81,6 @@ void BaseOject::Start()
         t2 = chrono::system_clock::now();
 
         chrono::duration<float> dt = t2 - t1;
-
         bool jump = false;
         while(SDL_PollEvent(&event))
         {
@@ -128,38 +127,54 @@ void BaseOject::Start()
                     gameOver();
                 }
         }
+
     }
     Close();
 }
 
 void BaseOject::update(bool jump, float elapsedTime, bool &gameover)
 {
-    bird->update(jump, elapsedTime);
+       //bird
+       bird->update(jump, elapsedTime);
 
-    for(auto p : pipes)
-    {
-        p->bottom_dst.x -= PIPE_V;
-        p->top_dst.x = p->bottom_dst.x;
+       //pipe
+       for(auto p : pipes)
+       {
+              p->bottom_dst.x -= PIPE_V;
+              p->top_dst.x = p->bottom_dst.x;
 
-        if(p->bottom_dst.x + p->bottom_dst.w < 0)
-        {
-            pipes.pop_front();
-            pipes.push_back(new Pipe(pipes.back()->bottom_dst.x + PIPE_DISTANCE, rand() % 301 + 150));
-        }
+       if(p->bottom_dst.x + p->bottom_dst.w < 0)
+       {
+              pipes.pop_front();
+              pipes.push_back(new Pipe(pipes.back()->bottom_dst.x + PIPE_DISTANCE, rand() % 301 + 150));
+       }
 
-        if(bird->collisionDetector(p))
-            gameover = true;
-    }
+       if(bird->collisionDetector(p))
+              gameover = true;
+       }
 
-    ground1 -= PIPE_V;
-    ground2 -= PIPE_V;
+       //item
+       _item->rect_item.x-=PIPE_V;
 
-    if(ground1 + WIDTH < 0)
-        ground1 = WIDTH - 10;
-    if(ground2 + WIDTH < 0)
-        ground2 = WIDTH - 10;
+       if(_item->rect_item.x<0)
+       {
+              _item=new item(600,rand() % 301 + 150);
+       }
 
-    render();
+       if(bird->eat_item(_item))
+       {
+              _item->eat = true;
+       }
+
+       ground1 -= PIPE_V;
+       ground2 -= PIPE_V;
+
+       if(ground1 + WIDTH < 0)
+              ground1 = WIDTH - 10;
+       if(ground2 + WIDTH < 0)
+              ground2 = WIDTH - 10;
+
+       render();
 }
 
 void BaseOject::gameOver()
@@ -210,9 +225,7 @@ void BaseOject::render()
     SDL_RenderCopy(grenderer, texture_background, NULL, NULL);
 
     //item
-    //items ->render_item(grenderer,texture_item);
-     //  SDL_RenderCopy(grenderer, texture_item, NULL, new SDL_Rect{100, 100 , 40 ,40});
-    // pipes
+    _item->render_item(grenderer,texture_item);
     for(auto pipe : pipes)
     {
         pipe->render_pipe(grenderer, texture_pipe);
