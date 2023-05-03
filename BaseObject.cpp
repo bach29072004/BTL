@@ -1,71 +1,81 @@
 #include "BaseObject.h"
-#include "Bird.h"
-#include "CommonFuntion.h"
-#include "Pipe.h"
+#include "Bird.cpp"
 
-
+#include <bits/stdc++.h>
 using namespace std;
-BaseObject::BaseObject()
+BaseOject::BaseOject(const char *title, int width, int height)
 {
-    gwindow = SDL_CreateWindow(Tiles, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
+    gwindow = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
     grenderer = SDL_CreateRenderer(gwindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-    LoadTexture();
-    bird = new Bird(Texture_bird_UP,Texture_bird_MID,Texture_bird_DOWN,grenderer);
+    loadTextures();
 
-    Run = true;
-    Gameover = false;
+    bird = new Bird(texture_bird_Down, texture_bird_Mid, texture_bird_Up, grenderer);
 
-    groundtop = -WIDTH / 2;
-    groundbot = WIDTH   / 2;
+    Running = true;
+    gameover = false;
+
+    ground1 = -WIDTH / 2;
+    ground2 = WIDTH   / 2;
 
     srand(time(NULL));
 }
 
-void BaseObject::init()
+void BaseOject::init()
 {
-    bird->onit();
+       bird->init();
 
-    for(auto pipe : pipes)
-        pipes.pop_front();
+       for(auto pipe : pipes)
+              pipes.pop_front();
 
-    pipes.push_back(new Pipe(WIDTH * 2 + PIPE_DISTANCE, rand() % 301 + 150));
-    pipes.push_back(new Pipe(pipes.back()->pipe_bottom_d.x + PIPE_DISTANCE, rand() % 301 + 150));
-    pipes.push_back(new Pipe(pipes.back()->pipe_bottom_d.x + PIPE_DISTANCE, rand() % 301 + 150));
+       pipes.push_back(new Pipe(WIDTH * 2 + PIPE_DISTANCE, rand() % 301 + 150));
+       pipes.push_back(new Pipe(pipes.back()->bottom_dst.x + PIPE_DISTANCE, rand() % 301 + 150));
+       pipes.push_back(new Pipe(pipes.back()->bottom_dst.x + PIPE_DISTANCE, rand() % 301 + 150));
 
-    GameStarted = false;
-       Gameover = false;
+       gameStarted = false;
+       gameover = false;
 
-    render();
+       render();
+}
+void BaseOject::menu(){
+       SDL_RenderClear(grenderer);
+       SDL_RenderCopy(grenderer, texture_background, NULL, NULL);
+       SDL_RenderCopy(grenderer,texture_play,NULL, new SDL_Rect{150,100,200,100});
+       SDL_RenderCopy(grenderer,texture_option,NULL,new SDL_Rect{150,250,200,100});
+       SDL_RenderCopy(grenderer,texture_hightscore,NULL,new SDL_Rect{150,400,200,100});
+       SDL_RenderPresent(grenderer);
 }
 
-void BaseObject::renderHighScore(){
-    string tmp = "High Score: " + to_string(high_score);
-    SDL_Surface* Surface_HightScore = TTF_RenderText_Solid(Font, tmp.c_str() , Color);
+void BaseOject::renderandsaveHighScore(){
+       string tmp = "High Score: " + to_string(high_score);
+       ofstream output("high_score.txt", ios::ate);
+       output << high_score << endl;
+       output.close();
+    SDL_Surface* surfaceMessage = TTF_RenderText_Solid(font, tmp.c_str() , White);
 
-    SDL_Texture* High_core_mess = SDL_CreateTextureFromSurface(grenderer, Surface_HightScore);
+    SDL_Texture* Message = SDL_CreateTextureFromSurface(grenderer, surfaceMessage);
 
-    SDL_Rect hight_score_rect;
-    hight_score_rect.x = 0;
-    hight_score_rect.y = 0;
-    hight_score_rect.w = Surface_HightScore->w;
-    hight_score_rect.h = Surface_HightScore->h;
+    SDL_Rect Message_rect;
+    Message_rect.x = 0;
+    Message_rect.y = 0;
+    Message_rect.w = surfaceMessage->w;
+    Message_rect.h = surfaceMessage->h;
 
-    SDL_RenderCopy(grenderer, High_core_mess, NULL, &hight_score_rect);
-    //cout << "D";
-    SDL_FreeSurface(Surface_HightScore);
-    SDL_DestroyTexture(High_core_mess);
+    SDL_RenderCopy(grenderer, Message, NULL, &Message_rect);
+    SDL_FreeSurface(surfaceMessage);
+    SDL_DestroyTexture(Message);
 }
 
-void BaseObject::Start()
+void BaseOject::Start()
 {
+
     init();
 
     auto t1 = chrono::system_clock::now();
     auto t2 = t1;
     // main game loop
 
-    while(Run)
+    while(Running)
     {
         t1 = t2;
         t2 = chrono::system_clock::now();
@@ -75,81 +85,91 @@ void BaseObject::Start()
         bool jump = false;
         while(SDL_PollEvent(&event))
         {
-            if(event.type == SDL_QUIT)
-                Run = false;
-
-            if((event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE) || (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT))
+              int x = event.motion.x, y = event.motion.y;
+              if(event.type == SDL_QUIT)
+                     Running = false;
+              if(startmenu == false){
+              if((event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE) ||
+                                                               (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT))
                 {
-                    Mix_PlayChannel(-1,Music,0);
-                    jump = GameStarted = true;
-                    if(MusicFirstTime == false) MusicTMP = false;
-                    if(MusicFirstTime == true && MusicTMP == 1) MusicFirstTime = false;
+                    Mix_PlayChannel(-1,music,0);
+                    jump = gameStarted = true;
+                    if(firstTime == false) tmpMusic = false;
+                    if(firstTime == true && tmpMusic == 1) firstTime = false;
                 }
-        }
-        //cout << gameStarted << " " << tmpMusic << " " << firstTime << endl;
-        if(GameStarted == true && MusicTMP == 0 && MusicFirstTime == true) {
-                MusicTMP = 1;
-                Mix_PlayChannel(-1,BackGroundSound,0);
-                PlayMusic++;
-                MusicFirstTime = false;
-                //cout << numberPlayMusic << "\n";
-        }
+              }
+
+              if(startmenu == false){
+                     if(gameStarted == true && tmpMusic == 0 && firstTime == true) {
+                            tmpMusic = 1;
+                            Mix_PlayChannel(-1,backgroundSound,0);
+                            numberPlayMusic++;
+                            firstTime = false;
+
+                     }
+              }
+              if(startmenu == true){
+                     menu();
+                     if (event.type == SDL_MOUSEBUTTONDOWN&& x>=150&&x<=150+200 && y>=100 && y <=100+100){
+                            startmenu = false;
+                     }
+              }
+       }
 
 
         if(frameDelay > dt.count())
-            SDL_Delay(frameDelay - dt.count());
+              SDL_Delay(frameDelay - dt.count());
 
-        if(GameStarted)
+        if(gameStarted)
         {
-            update(jump, dt.count(), Gameover);
-            if(Gameover)
+            update(jump, dt.count(), gameover);
+            if(gameover)
                 {
                     gameOver();
                 }
         }
     }
-
     Close();
 }
 
-void BaseObject::update(bool jump, float elapsedTime, bool &gameover)
+void BaseOject::update(bool jump, float elapsedTime, bool &gameover)
 {
     bird->update(jump, elapsedTime);
 
     for(auto p : pipes)
     {
-        p->pipe_bottom_d.x -= PIPE_V;
-        p->pipe_top_d.x = p->pipe_bottom_d.x;
+        p->bottom_dst.x -= PIPE_V;
+        p->top_dst.x = p->bottom_dst.x;
 
-        if(p->pipe_bottom_d.x + p->pipe_bottom_d.w < 0)
+        if(p->bottom_dst.x + p->bottom_dst.w < 0)
         {
             pipes.pop_front();
-            pipes.push_back(new Pipe(pipes.back()->pipe_bottom_d.x + PIPE_DISTANCE, rand() % 301 + 150));
+            pipes.push_back(new Pipe(pipes.back()->bottom_dst.x + PIPE_DISTANCE, rand() % 301 + 150));
         }
 
-        if(bird->CollisionPipe(p))
+        if(bird->collisionDetector(p))
             gameover = true;
     }
 
-    groundbot -= PIPE_V;
-    groundtop -= PIPE_V;
+    ground1 -= PIPE_V;
+    ground2 -= PIPE_V;
 
-    if(groundbot + WIDTH < 0)
-        groundbot = WIDTH - 10;
-    if(groundtop + WIDTH < 0)
-        groundtop = WIDTH - 10;
+    if(ground1 + WIDTH < 0)
+        ground1 = WIDTH - 10;
+    if(ground2 + WIDTH < 0)
+        ground2 = WIDTH - 10;
 
     render();
 }
 
-void BaseObject::gameOver()
+void BaseOject::gameOver()
 {
-    GameStarted = false;
+    gameStarted = false;
 
-    SDL_RenderCopy(grenderer, Texture_Gameover, NULL, new SDL_Rect{WIDTH / 2 - 96, HEIGHT / 3, 192, 42});
+    SDL_RenderCopy(grenderer, texture_gameover, NULL, new SDL_Rect{WIDTH / 2 - 96, HEIGHT / 3, 192, 42});
     SDL_RenderPresent(grenderer);
-    if(GameStarted == false) Mix_PlayMusic(DeadSound,0);
-    if(GameStarted == false) Mix_HaltChannel(-1);
+    if(gameStarted == false) Mix_PlayMusic(deadSound,0);
+    if(gameStarted == false) Mix_HaltChannel(-1);
     SDL_Delay(1000);
 
     bool wait = true, playagain = false;
@@ -162,85 +182,91 @@ void BaseObject::gameOver()
 
             if((event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE) || (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT))
                 wait = false, playagain = true;
+                startmenu = true;
         }
     }
-    if(high_score < bird->Score) high_score = bird->Score;
+    if(high_score < bird->score) high_score = bird->score;
 
-    //cout << high_score << "\n";
+
     if(playagain)
         {
-            MusicTMP = 0;
-            MusicFirstTime = true;
+            tmpMusic = 0;
+            firstTime = true;
             Start();
         }
     else
         {
 
-            Run = false;
+            Running = false;
         }
 }
 
-void BaseObject::render()
+void BaseOject::render()
 {
 
     SDL_RenderClear(grenderer);
 
     // background
-    SDL_RenderCopy(grenderer, Texture_Backround, NULL, NULL);
+    SDL_RenderCopy(grenderer, texture_background, NULL, NULL);
 
+    //item
+    //items ->render_item(grenderer,texture_item);
+     //  SDL_RenderCopy(grenderer, texture_item, NULL, new SDL_Rect{100, 100 , 40 ,40});
     // pipes
     for(auto pipe : pipes)
     {
-        pipe->render(grenderer, Texture_Pipe);
+        pipe->render_pipe(grenderer, texture_pipe);
     }
 
     // score
-    if(bird->Score > 9)
+    if(bird->score > 9)
     {
-        SDL_RenderCopy(grenderer, Texture_Number[bird->Score / 10 % 10], NULL, new SDL_Rect{WIDTH / 2 - 20, 100, 40, 52});
-        SDL_RenderCopy(grenderer, Texture_Number[bird->Score % 10], NULL, new SDL_Rect{WIDTH / 2 + 20, 100, 40, 52});
+        SDL_RenderCopy(grenderer, texture_numbers[bird->score / 10 % 10], NULL, new SDL_Rect{WIDTH / 2 - 20, 100, 40, 52});
+        SDL_RenderCopy(grenderer, texture_numbers[bird->score % 10], NULL, new SDL_Rect{WIDTH / 2 + 20, 100, 40, 52});
     }
     else
-        SDL_RenderCopy(grenderer, Texture_Number[bird->Score], NULL, new SDL_Rect{WIDTH / 2, 100, 40, 52});
+        SDL_RenderCopy(grenderer, texture_numbers[bird->score], NULL, new SDL_Rect{WIDTH / 2, 100, 40, 52});
 
     // ground
-    SDL_RenderCopy(grenderer, Texture_Ground, NULL, new SDL_Rect{groundbot, HEIGHT - GROUND_HEIGHT, WIDTH, GROUND_HEIGHT});
-    SDL_RenderCopy(grenderer, Texture_Ground, NULL, new SDL_Rect{groundtop, HEIGHT - GROUND_HEIGHT, WIDTH, GROUND_HEIGHT});
+    SDL_RenderCopy(grenderer, texture_ground, NULL, new SDL_Rect{ground1, HEIGHT - GROUND_HEIGHT, WIDTH, GROUND_HEIGHT});
+    SDL_RenderCopy(grenderer, texture_ground, NULL, new SDL_Rect{ground2, HEIGHT - GROUND_HEIGHT, WIDTH, GROUND_HEIGHT});
 
     // player
     bird->render();
-    renderHighScore();
+    renderandsaveHighScore();
     SDL_RenderPresent(grenderer);
 }
 
 
-void BaseObject::LoadTexture()
+void BaseOject::loadTextures()
 {
-    Texture_Backround = IMG_LoadTexture(grenderer, "picture/background-day.png");
-    Texture_Pipe = IMG_LoadTexture(grenderer, "picture/pipe.png");
-    Texture_bird_MID = IMG_LoadTexture(grenderer, "picture/dog2.png");
-    Texture_bird_UP = IMG_LoadTexture(grenderer, "picture/dog3.png");
-    Texture_bird_DOWN = IMG_LoadTexture(grenderer, "picture/dog2.png");
-    Texture_Ground = IMG_LoadTexture(grenderer, "picture/base.png");
-    Texture_Gameover = IMG_LoadTexture(grenderer, "picture/gameover.png");
-    Texture_item = IMG_LoadTexture(grenderer, "picture/item.png");
+    texture_background = IMG_LoadTexture(grenderer, "picture/background-day.png");
+    texture_pipe = IMG_LoadTexture(grenderer, "picture/pipe.png");
+    texture_bird_Mid = IMG_LoadTexture(grenderer, "picture/dog2.png");
+    texture_bird_Down = IMG_LoadTexture(grenderer, "picture/dog3.png");
+    texture_bird_Up = IMG_LoadTexture(grenderer, "picture/dog3.png");
+    texture_ground = IMG_LoadTexture(grenderer, "picture/base.png");
+    texture_gameover = IMG_LoadTexture(grenderer, "picture/gameover.png");
+    texture_item = IMG_LoadTexture(grenderer, "picture/item.png");
+    texture_play = IMG_LoadTexture(grenderer,"picture/play.png");
+    texture_option = IMG_LoadTexture(grenderer,"picture/option.png");
+    texture_hightscore = IMG_LoadTexture(grenderer,"picture/score.png");
 
 
     for(int i = 0; i < 10; i++)
     {
         string path = "picture/" + to_string(i) + ".png";
-        Texture_Number[i] = IMG_LoadTexture(grenderer, path.c_str());
+        texture_numbers[i] = IMG_LoadTexture(grenderer, path.c_str());
     }
 }
-void BaseObject::SaveHightScore(){
-       ofstream file_HightScore("hightscore.txt");
-       file_HightScore << high_score;
-}
-void RenderOldScore()
+
+void BaseOject::Close()
 {
 
-}
-void BaseObject::Close()
-{
     SDL_Quit();
 }
+
+
+
+
+

@@ -1,51 +1,46 @@
-#ifndef PIPE_H_
-#define PIPE_H_
+#ifndef PIPE_H
+#define PIPE_H
 
 
 #include <SDL.h>
-#include "CommonFuntion.h"
+#include "Commonfuntion.h"
 
 struct Pipe
 {
+    SDL_Rect top_src, top_dst ,bottom_dst, bottom_src;
 
-    SDL_Rect pipe_top_s, pipe_top_d, pipe_bottom_d, pipe_bottom_s;
+    bool passed;
 
-    bool passed_pipe = true;
-    Pipe(int x, int height_pipe)
+    Pipe(int x, int height)
     {
-              pipe_top_d.x = x;
-              pipe_top_d.y = 0;
-              pipe_top_d.w = PIPE_WIDTH;
-              pipe_top_d.h = HEIGHT - height_pipe ;
+        bottom_dst.x = x;
+        bottom_dst.y = HEIGHT - height;
+        bottom_dst.w = PIPE_WIDTH;
+        bottom_dst.h = height;
 
-              pipe_top_s.x = 0;
-              pipe_top_s.y = 0;
-              pipe_top_s.w = PIPE_WIDTH_SRC;
-              pipe_top_s.h = pipe_top_d.h;
+        bottom_src.x = 0;
+        bottom_src.y = 0;
+        bottom_src.w = PIPE_WIDTH_SRC;
+        bottom_src.h = height;
 
+        top_dst.x = x;
+        top_dst.y = 0;
+        top_dst.w = PIPE_WIDTH;
+        top_dst.h = HEIGHT - height - PIPE_GAP;
 
-              pipe_bottom_d.x = x;
-              pipe_bottom_d.y = HEIGHT - height_pipe - PIPE_GAP;
-              pipe_bottom_d.w = PIPE_WIDTH;
-              pipe_bottom_d.h = height_pipe;
+        top_src.x = top_src.y = 0;
+        top_src.w = PIPE_WIDTH_SRC;
+        top_src.h = top_dst.h;
 
-              pipe_bottom_s.x = 0;
-              pipe_bottom_s.y = 0;
-              pipe_bottom_s.w = PIPE_WIDTH_SRC;
-              pipe_bottom_s.h = height_pipe;
+        passed = false;
+    }
 
-
-
-              passed_pipe = false;
-       }
-
-       void render(SDL_Renderer *renderer, SDL_Texture *texture)
-       {
-              SDL_RenderCopy(renderer, texture, &pipe_bottom_s, &pipe_bottom_d);
-              SDL_RenderCopyEx(renderer, texture, &pipe_top_s, &pipe_top_d, 0, NULL, SDL_FLIP_VERTICAL);
-       }
+    void render_pipe(SDL_Renderer *renderer, SDL_Texture *texture)
+    {
+        SDL_RenderCopy(renderer, texture, &bottom_src, &bottom_dst);
+        SDL_RenderCopyEx(renderer, texture, &top_src, &top_dst, 0, NULL, SDL_FLIP_VERTICAL);
+    }
 };
 
 
 #endif // PIPE_H_INCLUDED
-

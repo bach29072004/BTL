@@ -64,7 +64,13 @@ bool Bird::collisionDetector(Pipe *pipe)
 
     return false;
 }
-
+bool Bird::eat_item(item*_item){
+       if (pos.x +pos.w>= _item->rect_item.x &&pos.x +pos.w<=_item->rect_item.x+_item->rect_item.w ){
+              if(pos.y>=_item->rect_item.y && pos.y <=_item->rect_item.y+_item->rect_item.h){
+                     return true;
+              }
+       }
+}
 void Bird::render()
 {
     animation();

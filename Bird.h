@@ -6,6 +6,7 @@
 #include <SDL_mixer.h>
 #include "Pipe.h"
 #include "Commonfuntion.h"
+#include "item.h"
 
 class Bird
 {
@@ -37,6 +38,7 @@ class Bird
         void update(bool jump, float elapsedTime);
         void animation();
         bool collisionDetector(Pipe *pipe);
+        bool eat_item(item*_item);
 };
 
 #endif // BIRD_H_INCLUDED
