@@ -32,10 +32,13 @@ class BaseOject
         SDL_Texture *texture_bird_Up;
         SDL_Texture *texture_bird_Mid;
         SDL_Texture *texture_bird_Down;
-        SDL_Texture *texture_item;
+        SDL_Texture *texture_item1;
+        SDL_Texture* texture_item2;
        SDL_Texture *texture_play;
        SDL_Texture * texture_option;
        SDL_Texture* texture_hightscore;
+       SDL_Texture* texture_bird_eat;
+       SDL_Texture *texture_bird_eat2;
 
 
         bool Running;

@@ -9,12 +9,14 @@ struct item
 {
        SDL_Rect rect_item;
        bool eat ;
-       item(int x ,int y){
+       int type;
+       item(int x ,int y,int t){
               rect_item.x = x;
               rect_item.y = y;
               rect_item.w =  40;
               rect_item.h = 40;
               eat = false;
+              type = t;
        }
        void render_item(SDL_Renderer * render , SDL_Texture *texture){
               if(!eat)

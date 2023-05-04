@@ -87,12 +87,12 @@
 	"Pipe.h"
 	"Commonfuntion.h"
 
-1683109763 source:e:\download\bach\game\baseobject.cpp
+1683218977 source:e:\download\bach\game\baseobject.cpp
 	"BaseObject.h"
 	"Bird.cpp"
 	<bits/stdc++.h>
 
-1682950882 e:\download\bach\game\bird.h
+1683218638 e:\download\bach\game\bird.h
 	<SDL.h>
 	<iostream>
 	<SDL_mixer.h>
@@ -120,17 +120,17 @@
 	"Commonfuntion.h"
 	"BaseObject.h"
 
-1682952812 e:\download\bach\game\baseobject.h
+1683218444 e:\download\bach\game\baseobject.h
 	"Bird.h"
 	"Pipe.h"
 	"Commonfuntion.h"
 	"item.h"
 
-1683106024 e:\download\bach\game\bird.cpp
+1683218814 e:\download\bach\game\bird.cpp
 	"Bird.h"
 	<bits/stdc++.h>
 
-1683106034 e:\download\bach\game\item.h
+1683218330 e:\download\bach\game\item.h
 	<SDL.h>
 	"Commonfuntion.h"
 

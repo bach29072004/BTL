@@ -10,7 +10,7 @@ BaseOject::BaseOject(const char *title, int width, int height)
 
     loadTextures();
 
-    bird = new Bird(texture_bird_Down, texture_bird_Mid, texture_bird_Up, grenderer);
+    bird = new Bird(texture_bird_Down, texture_bird_Mid, texture_bird_Up,texture_bird_eat, grenderer);
 
     Running = true;
     gameover = false;
@@ -31,7 +31,7 @@ void BaseOject::init()
        pipes.push_back(new Pipe(WIDTH * 2 + PIPE_DISTANCE, rand() % 301 + 150 ));
        pipes.push_back(new Pipe(pipes.back()->bottom_dst.x + PIPE_DISTANCE, rand() % 301 + 150));
        pipes.push_back(new Pipe(pipes.back()->bottom_dst.x + PIPE_DISTANCE, rand() % 301 + 150));
-       _item = new item(WIDTH * 2 + PIPE_DISTANCE,rand() % 301 + 150);
+       _item = new item(WIDTH * 2 + PIPE_DISTANCE,rand() % 301 + 150,2);
        gameStarted = false;
        gameover = false;
 
@@ -75,6 +75,7 @@ void BaseOject::Start()
     auto t2 = t1;
     // main game loop
 
+       int t_;
     while(Running)
     {
         t1 = t2;
@@ -119,6 +120,7 @@ void BaseOject::Start()
         if(frameDelay > dt.count())
               SDL_Delay(frameDelay - dt.count());
 
+
         if(gameStarted)
         {
             update(jump, dt.count(), gameover);
@@ -149,16 +151,19 @@ void BaseOject::update(bool jump, float elapsedTime, bool &gameover)
               pipes.push_back(new Pipe(pipes.back()->bottom_dst.x + PIPE_DISTANCE, rand() % 301 + 150));
        }
 
-       if(bird->collisionDetector(p))
-              gameover = true;
+       if(bird->collisionDetector(p,_item))
+              if (_item->eat)
+                     _item-> eat = false;
+              else
+                    gameover = true;
        }
 
        //item
        _item->rect_item.x-=PIPE_V;
 
-       if(_item->rect_item.x<0)
+       if(bird->score%11==0)
        {
-              _item=new item(600,rand() % 301 + 150);
+              _item=new item(500,300,2);
        }
 
        if(bird->eat_item(_item))
@@ -225,7 +230,7 @@ void BaseOject::render()
     SDL_RenderCopy(grenderer, texture_background, NULL, NULL);
 
     //item
-    _item->render_item(grenderer,texture_item);
+    _item->render_item(grenderer,texture_item2);
     for(auto pipe : pipes)
     {
         pipe->render_pipe(grenderer, texture_pipe);
@@ -245,7 +250,7 @@ void BaseOject::render()
     SDL_RenderCopy(grenderer, texture_ground, NULL, new SDL_Rect{ground2, HEIGHT - GROUND_HEIGHT, WIDTH, GROUND_HEIGHT});
 
     // player
-    bird->render();
+    bird->render(_item);
     renderandsaveHighScore();
     SDL_RenderPresent(grenderer);
 }
@@ -255,15 +260,18 @@ void BaseOject::loadTextures()
 {
     texture_background = IMG_LoadTexture(grenderer, "picture/background-day.png");
     texture_pipe = IMG_LoadTexture(grenderer, "picture/pipe.png");
-    texture_bird_Mid = IMG_LoadTexture(grenderer, "picture/dog2.png");
-    texture_bird_Down = IMG_LoadTexture(grenderer, "picture/dog3.png");
-    texture_bird_Up = IMG_LoadTexture(grenderer, "picture/dog3.png");
+    texture_bird_Mid = IMG_LoadTexture(grenderer, "picture/dog.png");
+    texture_bird_Down = IMG_LoadTexture(grenderer, "picture/dog.png");
+    texture_bird_Up = IMG_LoadTexture(grenderer, "picture/dog.png");
     texture_ground = IMG_LoadTexture(grenderer, "picture/base.png");
     texture_gameover = IMG_LoadTexture(grenderer, "picture/gameover.png");
-    texture_item = IMG_LoadTexture(grenderer, "picture/item.png");
+    texture_item1 = IMG_LoadTexture(grenderer, "picture/item.png");
     texture_play = IMG_LoadTexture(grenderer,"picture/play.png");
     texture_option = IMG_LoadTexture(grenderer,"picture/option.png");
     texture_hightscore = IMG_LoadTexture(grenderer,"picture/score.png");
+    texture_bird_eat = IMG_LoadTexture(grenderer,"picture/dogeat.png");
+    texture_item2 =IMG_LoadTexture(grenderer,"picture/itemx2.png");
+    texture_bird_eat2 = IMG_LoadTexture(grenderer,"picture/dogx2.png");
 
 
     for(int i = 0; i < 10; i++)

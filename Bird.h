@@ -19,6 +19,8 @@ class Bird
         SDL_Texture *up;
         SDL_Texture *down;
         SDL_Texture *mid;
+        SDL_Texture* birdeat;
+        SDL_Texture* birdeatx2;
         SDL_Texture *CurrentRenderingTexture;
         SDL_Renderer *renderer;
 
@@ -28,16 +30,16 @@ class Bird
     public:
         int score;
         Mix_Chunk* scoreSound = Mix_LoadWAV("score.wav");
-        Bird(SDL_Texture *up, SDL_Texture *mid, SDL_Texture *down, SDL_Renderer *renderer);
+        Bird(SDL_Texture *up, SDL_Texture *mid, SDL_Texture *down, SDL_Texture*birdeat, SDL_Renderer *renderer);
         int getScore()
         {
             return score;
         }
         void init();
-        void render();
+        void render(item* _item);
         void update(bool jump, float elapsedTime);
         void animation();
-        bool collisionDetector(Pipe *pipe);
+        bool collisionDetector(Pipe *pipe, item*items);
         bool eat_item(item*_item);
 };
 

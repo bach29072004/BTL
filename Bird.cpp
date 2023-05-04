@@ -16,7 +16,7 @@ void Bird::init()
     pos.h = BIRD_HEIGHT;
 }
 
-Bird::Bird(SDL_Texture *up, SDL_Texture *mid, SDL_Texture *down, SDL_Renderer *renderer) : up(up), mid(mid), down(down), renderer(renderer)
+Bird::Bird(SDL_Texture *up, SDL_Texture *mid, SDL_Texture *down, SDL_Texture*birdeat, SDL_Renderer *renderer) : up(up), mid(mid), down(down), birdeat(birdeat),renderer(renderer)
 {
        init();
 }
@@ -41,41 +41,44 @@ void Bird::update(bool jump, float elapsedTime)
     pos.y += Velocity * elapsedTime;
 }
 
-bool Bird::collisionDetector(Pipe *pipe)
+bool Bird::collisionDetector(Pipe *pipe,item* items)
 {
-    if(pipe->top_dst.x <= pos.x + pos.w && pipe->top_dst.x + PIPE_WIDTH >= pos.x + pos.w)
-        if(pos.y < pipe->top_dst.y + pipe->top_dst.h || pos.y + pos.h > pipe->bottom_dst.y)
-            return true;
+       if(pipe->top_dst.x <= pos.x + pos.w && pipe->top_dst.x + PIPE_WIDTH >= pos.x + pos.w)
+              if(pos.y < pipe->top_dst.y + pipe->top_dst.h || pos.y + pos.h > pipe->bottom_dst.y)
+                     return true;
 
-    if(pos.y + pos.h > HEIGHT - GROUND_HEIGHT)
-        return true;
+       if(pos.y + pos.h > HEIGHT - GROUND_HEIGHT)
+              return true;
 
 
-    if(pos.y < 0)
-        return true;
+       if(pos.y < 0)
+              return true;
 
-    if(!pipe->passed && pipe->top_dst.x + PIPE_WIDTH < pos.x)
-    {
-        pipe->passed = true;
-        score++;
-        if(pipe->passed == true) Mix_PlayChannel(-1,scoreSound,0);
+       if(!pipe->passed && pipe->top_dst.x + PIPE_WIDTH < pos.x)
+       {
+              pipe->passed = true;
+              if (items->eat&&items->type==2)
+                     score+=2;
+              else score+=1;
+              if(pipe->passed == true) Mix_PlayChannel(-1,scoreSound,0);
 
-    }
+       }
 
     return false;
 }
 bool Bird::eat_item(item*_item){
        if (pos.x +pos.w>= _item->rect_item.x &&pos.x +pos.w<=_item->rect_item.x+_item->rect_item.w ){
               if(pos.y>=_item->rect_item.y && pos.y <=_item->rect_item.y+_item->rect_item.h){
+                     _item->eat= true;
                      return true;
               }
        }
        return false;
 }
-void Bird::render()
+void Bird::render(item* _item)
 {
     animation();
-
+       if (_item->eat ==false){
     if(Velocity == 0)
         SDL_RenderCopy(renderer, mid, NULL, &pos);
     else if(Velocity < 60)
@@ -84,7 +87,21 @@ void Bird::render()
         SDL_RenderCopyEx(renderer, CurrentRenderingTexture, NULL, &pos, 30.0, NULL, SDL_FLIP_NONE);
     else if(Velocity >= 200)
         SDL_RenderCopyEx(renderer, mid, NULL, &pos, 90.0, NULL, SDL_FLIP_NONE);
-
+       }
+       else{
+              switch (_item->type){
+              case 1:
+                     {
+                            SDL_RenderCopy(renderer,birdeat,NULL,&_item->rect_item);
+                            break;
+                     }
+              case 2:
+                     {
+                            SDL_RenderCopy(renderer,birdeatx2,NULL,&_item->rect_item);
+                            break;
+                     }
+              }
+       }
 }
 
 void Bird::animation()
