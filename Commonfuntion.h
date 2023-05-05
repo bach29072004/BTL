@@ -11,7 +11,7 @@
 #include <time.h>
 #include <string>
 #include <fstream>
-
+#include <algorithm>
 
 #define WIDTH 500
 #define HEIGHT 667

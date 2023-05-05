@@ -38,7 +38,7 @@ void BaseOject::init()
        render();
 }
 void BaseOject::menu(){
-       if(option == false){
+       if(option == false && highscore==false){
        SDL_RenderClear(grenderer);
        SDL_RenderCopy(grenderer, texture_background, NULL, NULL);
        SDL_RenderCopy(grenderer,texture_play,NULL, new SDL_Rect{150,100,200,100});
@@ -46,16 +46,64 @@ void BaseOject::menu(){
        SDL_RenderCopy(grenderer,texture_hightscore,NULL,new SDL_Rect{150,400,200,100});
        SDL_RenderPresent(grenderer);
        }
-       else Option();
+       else if (option == true ){
+              Option();
+       }
+       else if (highscore == true){
+              renderoldhightscore();
+       }
 }
 void BaseOject::Option(){
        SDL_RenderClear(grenderer);
        SDL_RenderCopy(grenderer, texture_background, NULL, NULL);
        SDL_RenderCopy(grenderer,texture_level,NULL,new SDL_Rect{50,50,400,357});
-       SDL_RenderCopy(grenderer,texture_loa, NULL , new SDL_Rect{400,600,50,50});
-       SDL_RenderPresent(grenderer);
+       if (loa== true)
+              SDL_RenderCopy(grenderer,texture_loa, NULL , new SDL_Rect{400,600,50,50});
+       else
+              SDL_RenderCopy(grenderer,texture_noloa, NULL , new SDL_Rect{400,600,50,50});
+       if(level==0){
+              SDL_RenderCopy(grenderer,texture_flag,NULL,new SDL_Rect{90,70,40,40});
+       }
+       else if(level==1){
+              SDL_RenderCopy(grenderer,texture_flag,NULL,new SDL_Rect{90,160,40,40});
+       }
+       else if(level==2){
+              SDL_RenderCopy(grenderer,texture_flag,NULL,new SDL_Rect{90,250,40,40});
+       }
+       else if(level==3){
+              SDL_RenderCopy(grenderer,texture_flag,NULL,new SDL_Rect{90,340,40,40});
+       }
+      SDL_RenderCopy(grenderer,texture_back,NULL,new SDL_Rect{20,600,60,60});
+        SDL_RenderPresent(grenderer);
 }
-
+void BaseOject::renderoldhightscore(){
+       ifstream infile;
+       infile.open("high_score.txt",ios::in);
+       int *score_ = new int[50];
+       fill(score_,score_+50,0);
+       int i=0;
+       while (!infile.eof()){
+              infile>>score_[i];
+              i++;
+       }
+       sort(score_,score_+50);
+       SDL_RenderClear(grenderer);
+       SDL_RenderCopy(grenderer, texture_background, NULL, NULL);
+       for (int j = 49;j>=40;j--){
+               if(score_[j] > 9)
+              {
+                     SDL_RenderCopy(grenderer, texture_numbers[score_[j]/10%10], NULL, new SDL_Rect{WIDTH / 2 , 20+(50-j)*40, 20, 26});
+                     SDL_RenderCopy(grenderer, texture_numbers[score_[j]%10], NULL, new SDL_Rect{WIDTH / 2+20 , 20+(50-j)*40, 20, 26});
+              }
+              else
+                     SDL_RenderCopy(grenderer, texture_numbers[score_[j]], NULL, new SDL_Rect{WIDTH / 2 , 20+(50-j)*40, 20, 26});
+       }
+       SDL_RenderCopy(grenderer,texture_back,NULL,new SDL_Rect{20,600,60,60});
+       SDL_RenderPresent(grenderer);
+       infile.close();
+       delete[] score_;
+       score_ = NULL;
+}
 void BaseOject::renderhightscore(){
        string tmp = "High Score: " + to_string(high_score);
 
@@ -118,11 +166,14 @@ void BaseOject::Start()
               }
               if(startmenu == true){
                      menu();
-                     if (event.type == SDL_MOUSEBUTTONDOWN&& x>=150&&x<=150+200 && y>=100 && y <=100+100&&!option){
+                     if (event.type == SDL_MOUSEBUTTONDOWN&& x>=150&&x<=350 && y>=100 && y <=200&&!option&&!highscore){
                             startmenu = false;
                      }
-                     if (event.type == SDL_MOUSEBUTTONDOWN&& x>=150&&x<=150+200 && y>=250 && y <=250+100){
+                     if (event.type == SDL_MOUSEBUTTONDOWN&& x>=150&&x<=350 && y>=250 && y <=350&&!highscore){
                             option =true;
+                     }
+                     if (event.type == SDL_MOUSEBUTTONDOWN&& x>=150&&x<=350&&y>=400 && y<=500&&!option){
+                            highscore = true;
                      }
                      if(option == true){
                             if ( event.type == SDL_MOUSEBUTTONDOWN&&x>=130&&x<=360&&y>=60&&y<=120){
@@ -137,8 +188,21 @@ void BaseOject::Start()
                             if ( event.type == SDL_MOUSEBUTTONDOWN&&x>=130&&x<=360&&y>=330&&y<=390){
                                    level =3;
                             }
+                             if ( event.type == SDL_MOUSEBUTTONDOWN&&x>=20&&x<=80&&y>=600&&y<=660){
+                                   option = false;
+                             }
+                             if ( event.type == SDL_MOUSEBUTTONDOWN&&x>=400&&x<=450&&y>=600&&y<=650){
+                                   if(loa)
+                                          loa = false;
+                                   else
+                                          loa = true;
+                             }
                      }
-
+                     if(highscore==true){
+                            if ( event.type == SDL_MOUSEBUTTONDOWN&&x>=20&&x<=80&&y>=600&&y<=660){
+                                   highscore = false;
+                             }
+                     }
               }
               if(event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE){
                      paused =true;
@@ -147,12 +211,17 @@ void BaseOject::Start()
        }
 
 
+
         if(frameDelay > dt.count())
               SDL_Delay(frameDelay - dt.count());
 
 
         if(gameStarted)
         {
+              if (loa==false){
+                     Mix_Pause(-1);
+                     Mix_PauseMusic();
+               }
             update(jump, dt.count(), gameover);
             if(gameover)
                 {
@@ -264,7 +333,6 @@ void BaseOject::gameOver()
         }
     else
         {
-
             Running = false;
         }
 }
@@ -323,7 +391,9 @@ void BaseOject::loadTextures()
      texture_item2 =IMG_LoadTexture(grenderer,"picture/itemx2.png");
      texture_level = IMG_LoadTexture(grenderer,"picture/level.png");
      texture_loa = IMG_LoadTexture(grenderer,"picture/loa.png");
-
+     texture_noloa=IMG_LoadTexture(grenderer,"picture/noloa.png");
+       texture_back= IMG_LoadTexture(grenderer,"picture/back.png");
+       texture_flag = IMG_LoadTexture(grenderer,"picture/flag.png");
 
     for(int i = 0; i < 10; i++)
     {

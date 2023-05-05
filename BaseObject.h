@@ -14,8 +14,10 @@ class BaseOject
         TTF_Font* font = TTF_OpenFont("font.ttf", 25);
         SDL_Color White = {255, 255, 255};
         int high_score = 0;
+        bool loa = true;
        bool startmenu = true;
        bool option = false;
+       bool highscore = false;
         int numberPlayMusic = 0;
         bool firstTime = true;
         int tmpMusic = 0;
@@ -23,7 +25,7 @@ class BaseOject
         Mix_Music* deadSound = Mix_LoadMUS("crash.wav");
         Mix_Chunk* backgroundSound = Mix_LoadWAV("nhacnen.mp3");
         bool paused = false;
-        int level=3;
+        int level=0;
 
 
         SDL_Texture *texture_background;
@@ -43,8 +45,9 @@ class BaseOject
        SDL_Texture *texture_bird_eat2;
        SDL_Texture *texture_level;
        SDL_Texture *texture_loa;
-
-
+       SDL_Texture*texture_noloa;
+       SDL_Texture *texture_back;
+       SDL_Texture * texture_flag;
 
 
         bool Running;
@@ -61,6 +64,7 @@ class BaseOject
         void pause();
         void savehighscore();
         void Option();
+        void renderoldhightscore();
 
 
 
