@@ -11,7 +11,7 @@
 class Bird
 {
     private:
-        float Velocity;
+       float Velocity;
         float Acceleration;
 
         SDL_Rect pos;
@@ -28,9 +28,10 @@ class Bird
 
 
     public:
+
         int score;
         Mix_Chunk* scoreSound = Mix_LoadWAV("score.wav");
-        Bird(SDL_Texture *up, SDL_Texture *mid, SDL_Texture *down, SDL_Texture*birdeat, SDL_Renderer *renderer);
+        Bird(SDL_Texture *up, SDL_Texture *mid, SDL_Texture *down, SDL_Texture*birdeat, SDL_Texture*birdeatx2, SDL_Renderer *renderer);
         int getScore()
         {
             return score;

@@ -16,7 +16,8 @@ void Bird::init()
     pos.h = BIRD_HEIGHT;
 }
 
-Bird::Bird(SDL_Texture *up, SDL_Texture *mid, SDL_Texture *down, SDL_Texture*birdeat, SDL_Renderer *renderer) : up(up), mid(mid), down(down), birdeat(birdeat),renderer(renderer)
+Bird::Bird(SDL_Texture *up, SDL_Texture *mid, SDL_Texture *down, SDL_Texture*birdeat, SDL_Texture* birdeatx2,SDL_Renderer *renderer) :
+                     up(up), mid(mid),down(down), birdeat(birdeat), birdeatx2(birdeatx2),renderer(renderer)
 {
        init();
 }
@@ -77,32 +78,26 @@ bool Bird::eat_item(item*_item){
 }
 void Bird::render(item* _item)
 {
-    animation();
-       if (_item->eat ==false){
-    if(Velocity == 0)
-        SDL_RenderCopy(renderer, mid, NULL, &pos);
-    else if(Velocity < 60)
-        SDL_RenderCopyEx(renderer, CurrentRenderingTexture, NULL, &pos, -30.0, NULL, SDL_FLIP_NONE);
-    else if(Velocity >= 60 && Velocity < 200)
-        SDL_RenderCopyEx(renderer, CurrentRenderingTexture, NULL, &pos, 30.0, NULL, SDL_FLIP_NONE);
-    else if(Velocity >= 200)
-        SDL_RenderCopyEx(renderer, mid, NULL, &pos, 90.0, NULL, SDL_FLIP_NONE);
+       animation();
+       if (_item->eat ==false)
+       {
+              if(Velocity == 0)
+                     SDL_RenderCopy(renderer, mid, NULL, &pos);
+              else if(Velocity < 60)
+                     SDL_RenderCopyEx(renderer, CurrentRenderingTexture, NULL, &pos, -30.0, NULL, SDL_FLIP_NONE);
+              else if(Velocity >= 60 && Velocity < 200)
+                     SDL_RenderCopyEx(renderer, CurrentRenderingTexture, NULL, &pos, 30.0, NULL, SDL_FLIP_NONE);
+              else if(Velocity >= 200)
+                     SDL_RenderCopyEx(renderer, mid, NULL, &pos, 90.0, NULL, SDL_FLIP_NONE);
        }
        else{
-              switch (_item->type){
-              case 1:
-                     {
-                            SDL_RenderCopy(renderer,birdeat,NULL,&_item->rect_item);
-                            break;
-                     }
-              case 2:
-                     {
-                            SDL_RenderCopy(renderer,birdeatx2,NULL,&_item->rect_item);
-                            break;
-                     }
-              }
+              if (_item->type==1)
+                     SDL_RenderCopy(renderer,birdeat,NULL,&pos);
+              else
+                     SDL_RenderCopy(renderer,birdeatx2,NULL,&pos);
        }
 }
+
 
 void Bird::animation()
 {

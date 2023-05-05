@@ -6,22 +6,24 @@
 #include "Pipe.h"
 #include "Commonfuntion.h"
 #include "item.h"
-
+using namespace std;
 class BaseOject
 {
     public:
-
         int score;
         TTF_Font* font = TTF_OpenFont("font.ttf", 25);
         SDL_Color White = {255, 255, 255};
         int high_score = 0;
        bool startmenu = true;
+       bool option = false;
         int numberPlayMusic = 0;
         bool firstTime = true;
         int tmpMusic = 0;
         Mix_Chunk* music = Mix_LoadWAV("fly.wav");
         Mix_Music* deadSound = Mix_LoadMUS("crash.wav");
         Mix_Chunk* backgroundSound = Mix_LoadWAV("nhacnen.mp3");
+        bool paused = false;
+        int level=3;
 
 
         SDL_Texture *texture_background;
@@ -39,6 +41,10 @@ class BaseOject
        SDL_Texture* texture_hightscore;
        SDL_Texture* texture_bird_eat;
        SDL_Texture *texture_bird_eat2;
+       SDL_Texture *texture_level;
+       SDL_Texture *texture_loa;
+
+
 
 
         bool Running;
@@ -51,7 +57,11 @@ class BaseOject
         void render();
         void gameOver();
         void init();
-        void renderandsaveHighScore();
+        void renderhightscore();
+        void pause();
+        void savehighscore();
+        void Option();
+
 
 
     private:

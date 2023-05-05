@@ -10,7 +10,7 @@ BaseOject::BaseOject(const char *title, int width, int height)
 
     loadTextures();
 
-    bird = new Bird(texture_bird_Down, texture_bird_Mid, texture_bird_Up,texture_bird_eat, grenderer);
+    bird = new Bird(texture_bird_Down, texture_bird_Mid, texture_bird_Up,texture_bird_eat,texture_bird_eat2, grenderer);
 
     Running = true;
     gameover = false;
@@ -29,28 +29,36 @@ void BaseOject::init()
               pipes.pop_front();
 
        pipes.push_back(new Pipe(WIDTH * 2 + PIPE_DISTANCE, rand() % 301 + 150 ));
-       pipes.push_back(new Pipe(pipes.back()->bottom_dst.x + PIPE_DISTANCE, rand() % 301 + 150));
-       pipes.push_back(new Pipe(pipes.back()->bottom_dst.x + PIPE_DISTANCE, rand() % 301 + 150));
-       _item = new item(WIDTH * 2 + PIPE_DISTANCE,rand() % 301 + 150,2);
+       pipes.push_back(new Pipe(pipes.back()->bottom_dst.x + PIPE_DISTANCE+level*40, rand() % 301 + 150));
+       pipes.push_back(new Pipe(pipes.back()->bottom_dst.x + PIPE_DISTANCE+level*40, rand() % 301 + 150));
+       _item = new item(WIDTH * 2 + PIPE_DISTANCE+level*40,rand() % 301 + 150,2);
        gameStarted = false;
        gameover = false;
 
        render();
 }
 void BaseOject::menu(){
+       if(option == false){
        SDL_RenderClear(grenderer);
        SDL_RenderCopy(grenderer, texture_background, NULL, NULL);
        SDL_RenderCopy(grenderer,texture_play,NULL, new SDL_Rect{150,100,200,100});
        SDL_RenderCopy(grenderer,texture_option,NULL,new SDL_Rect{150,250,200,100});
        SDL_RenderCopy(grenderer,texture_hightscore,NULL,new SDL_Rect{150,400,200,100});
        SDL_RenderPresent(grenderer);
+       }
+       else Option();
+}
+void BaseOject::Option(){
+       SDL_RenderClear(grenderer);
+       SDL_RenderCopy(grenderer, texture_background, NULL, NULL);
+       SDL_RenderCopy(grenderer,texture_level,NULL,new SDL_Rect{50,50,400,357});
+       SDL_RenderCopy(grenderer,texture_loa, NULL , new SDL_Rect{400,600,50,50});
+       SDL_RenderPresent(grenderer);
 }
 
-void BaseOject::renderandsaveHighScore(){
+void BaseOject::renderhightscore(){
        string tmp = "High Score: " + to_string(high_score);
-       ofstream output("high_score.txt", ios::ate);
-       output << high_score << endl;
-       output.close();
+
     SDL_Surface* surfaceMessage = TTF_RenderText_Solid(font, tmp.c_str() , White);
 
     SDL_Texture* Message = SDL_CreateTextureFromSurface(grenderer, surfaceMessage);
@@ -110,9 +118,31 @@ void BaseOject::Start()
               }
               if(startmenu == true){
                      menu();
-                     if (event.type == SDL_MOUSEBUTTONDOWN&& x>=150&&x<=150+200 && y>=100 && y <=100+100){
+                     if (event.type == SDL_MOUSEBUTTONDOWN&& x>=150&&x<=150+200 && y>=100 && y <=100+100&&!option){
                             startmenu = false;
                      }
+                     if (event.type == SDL_MOUSEBUTTONDOWN&& x>=150&&x<=150+200 && y>=250 && y <=250+100){
+                            option =true;
+                     }
+                     if(option == true){
+                            if ( event.type == SDL_MOUSEBUTTONDOWN&&x>=130&&x<=360&&y>=60&&y<=120){
+                                   level =0;
+                            }
+                            if ( event.type == SDL_MOUSEBUTTONDOWN&&x>=130&&x<=360&&y>=150&&y<=210){
+                                   level =1;
+                            }
+                            if ( event.type == SDL_MOUSEBUTTONDOWN&&x>=130&&x<=360&&y>=240&&y<=300){
+                                   level =2;
+                            }
+                            if ( event.type == SDL_MOUSEBUTTONDOWN&&x>=130&&x<=360&&y>=330&&y<=390){
+                                   level =3;
+                            }
+                     }
+
+              }
+              if(event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE){
+                     paused =true;
+                     pause();
               }
        }
 
@@ -133,6 +163,16 @@ void BaseOject::Start()
     }
     Close();
 }
+void BaseOject::pause(){
+       while (paused){
+              while (SDL_PollEvent(&event)){
+                     if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE){
+                            paused = false;
+                            return;
+                     }
+              }
+       }
+}
 
 void BaseOject::update(bool jump, float elapsedTime, bool &gameover)
 {
@@ -142,20 +182,17 @@ void BaseOject::update(bool jump, float elapsedTime, bool &gameover)
        //pipe
        for(auto p : pipes)
        {
-              p->bottom_dst.x -= PIPE_V;
+              p->bottom_dst.x -= (PIPE_V+level);
               p->top_dst.x = p->bottom_dst.x;
 
        if(p->bottom_dst.x + p->bottom_dst.w < 0)
        {
               pipes.pop_front();
-              pipes.push_back(new Pipe(pipes.back()->bottom_dst.x + PIPE_DISTANCE, rand() % 301 + 150));
+              pipes.push_back(new Pipe(pipes.back()->bottom_dst.x + PIPE_DISTANCE+level*40, rand() % 301 + 150));
        }
 
        if(bird->collisionDetector(p,_item))
-              if (_item->eat)
-                     _item-> eat = false;
-              else
-                    gameover = true;
+              gameover = true;
        }
 
        //item
@@ -171,8 +208,8 @@ void BaseOject::update(bool jump, float elapsedTime, bool &gameover)
               _item->eat = true;
        }
 
-       ground1 -= PIPE_V;
-       ground2 -= PIPE_V;
+       ground1 -= (PIPE_V+level);
+       ground2 -= (PIPE_V+level);
 
        if(ground1 + WIDTH < 0)
               ground1 = WIDTH - 10;
@@ -184,9 +221,18 @@ void BaseOject::update(bool jump, float elapsedTime, bool &gameover)
 
 void BaseOject::gameOver()
 {
+
     gameStarted = false;
 
-    SDL_RenderCopy(grenderer, texture_gameover, NULL, new SDL_Rect{WIDTH / 2 - 96, HEIGHT / 3, 192, 42});
+    SDL_RenderCopy(grenderer, texture_gameover, NULL, new SDL_Rect{WIDTH / 2 -96, HEIGHT/2-100, 192, 42});
+    SDL_RenderCopy(grenderer, texture_bird_Mid, NULL, new SDL_Rect{WIDTH / 2 -100, HEIGHT / 2, 200, 200});
+    if(bird->score > 9)
+    {
+        SDL_RenderCopy(grenderer, texture_numbers[bird->score / 10 % 10], NULL, new SDL_Rect{WIDTH / 2-80 , HEIGHT / 2+48, 80, 104});
+        SDL_RenderCopy(grenderer, texture_numbers[bird->score % 10], NULL, new SDL_Rect{WIDTH / 2 , HEIGHT / 2+48, 80, 104});
+    }
+    else
+        SDL_RenderCopy(grenderer, texture_numbers[bird->score], NULL, new SDL_Rect{WIDTH / 2 - 40, HEIGHT / 2+48, 80, 104});
     SDL_RenderPresent(grenderer);
     if(gameStarted == false) Mix_PlayMusic(deadSound,0);
     if(gameStarted == false) Mix_HaltChannel(-1);
@@ -205,6 +251,8 @@ void BaseOject::gameOver()
                 startmenu = true;
         }
     }
+    if (high_score!=0)
+              savehighscore();
     if(high_score < bird->score) high_score = bird->score;
 
 
@@ -251,9 +299,10 @@ void BaseOject::render()
 
     // player
     bird->render(_item);
-    renderandsaveHighScore();
+    renderhightscore();
     SDL_RenderPresent(grenderer);
 }
+
 
 
 void BaseOject::loadTextures()
@@ -265,13 +314,15 @@ void BaseOject::loadTextures()
     texture_bird_Up = IMG_LoadTexture(grenderer, "picture/dog.png");
     texture_ground = IMG_LoadTexture(grenderer, "picture/base.png");
     texture_gameover = IMG_LoadTexture(grenderer, "picture/gameover.png");
-    texture_item1 = IMG_LoadTexture(grenderer, "picture/item.png");
     texture_play = IMG_LoadTexture(grenderer,"picture/play.png");
     texture_option = IMG_LoadTexture(grenderer,"picture/option.png");
     texture_hightscore = IMG_LoadTexture(grenderer,"picture/score.png");
     texture_bird_eat = IMG_LoadTexture(grenderer,"picture/dogeat.png");
-    texture_item2 =IMG_LoadTexture(grenderer,"picture/itemx2.png");
     texture_bird_eat2 = IMG_LoadTexture(grenderer,"picture/dogx2.png");
+    texture_item1 = IMG_LoadTexture(grenderer, "picture/item.png");
+     texture_item2 =IMG_LoadTexture(grenderer,"picture/itemx2.png");
+     texture_level = IMG_LoadTexture(grenderer,"picture/level.png");
+     texture_loa = IMG_LoadTexture(grenderer,"picture/loa.png");
 
 
     for(int i = 0; i < 10; i++)
@@ -281,10 +332,16 @@ void BaseOject::loadTextures()
     }
 }
 
+void BaseOject::savehighscore(){
+       ofstream outfile;
+       outfile.open("high_score.txt",ios::app);
+       outfile << high_score << endl;
+       outfile.close();
+}
+
 void BaseOject::Close()
 {
-
-    SDL_Quit();
+       SDL_Quit();
 }
 
 
