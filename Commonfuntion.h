@@ -33,6 +33,9 @@
 #define GROUND_HEIGHT 100
 #define GROUND_WIDTH 300
 
+#define TIME_SPAWN_ITEM 15
+#define TIME_ITEM_OVER 5
+
 #define GRAVITY 90.0f
 
 #define FPS 60

@@ -21,11 +21,13 @@ class BaseOject
         int numberPlayMusic = 0;
         bool firstTime = true;
         int tmpMusic = 0;
+        Mix_Chunk* click = Mix_LoadWAV("click.wav");
         Mix_Chunk* music = Mix_LoadWAV("fly.wav");
         Mix_Music* deadSound = Mix_LoadMUS("crash.wav");
         Mix_Chunk* backgroundSound = Mix_LoadWAV("nhacnen.mp3");
         bool paused = false;
         int level=0;
+        float timed =0;
 
 
         SDL_Texture *texture_background;
@@ -36,9 +38,8 @@ class BaseOject
         SDL_Texture *texture_bird_Up;
         SDL_Texture *texture_bird_Mid;
         SDL_Texture *texture_bird_Down;
-        SDL_Texture *texture_item1;
-        SDL_Texture* texture_item2;
        SDL_Texture *texture_play;
+       SDL_Texture*texture_item[2];
        SDL_Texture * texture_option;
        SDL_Texture* texture_hightscore;
        SDL_Texture* texture_bird_eat;

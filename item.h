@@ -10,6 +10,7 @@ struct item
        SDL_Rect rect_item;
        bool eat ;
        int type;
+       float time_dis = TIME_ITEM_OVER;
        item(int x ,int y,int t){
               rect_item.x = x;
               rect_item.y = y;
