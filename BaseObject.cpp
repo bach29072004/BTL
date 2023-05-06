@@ -92,11 +92,11 @@ void BaseOject::renderoldhightscore(){
        for (int j = 49;j>=40;j--){
                if(score_[j] > 9)
               {
-                     SDL_RenderCopy(grenderer, texture_numbers[score_[j]/10%10], NULL, new SDL_Rect{WIDTH / 2 , 20+(50-j)*40, 20, 26});
-                     SDL_RenderCopy(grenderer, texture_numbers[score_[j]%10], NULL, new SDL_Rect{WIDTH / 2+20 , 20+(50-j)*40, 20, 26});
+                     SDL_RenderCopy(grenderer, texture_numbers[score_[j]/10%10], NULL, new SDL_Rect{WIDTH / 2-10 , (50-j)*50, 30, 39});
+                     SDL_RenderCopy(grenderer, texture_numbers[score_[j]%10], NULL, new SDL_Rect{WIDTH / 2+10 , (50-j)*50, 30, 39});
               }
               else
-                     SDL_RenderCopy(grenderer, texture_numbers[score_[j]], NULL, new SDL_Rect{WIDTH / 2 , 20+(50-j)*40, 20, 26});
+                     SDL_RenderCopy(grenderer, texture_numbers[score_[j]], NULL, new SDL_Rect{WIDTH / 2 , (50-j)*50, 30, 39});
        }
        SDL_RenderCopy(grenderer,texture_back,NULL,new SDL_Rect{20,600,60,60});
        SDL_RenderPresent(grenderer);

@@ -14,7 +14,7 @@ class Bird
        float Velocity;
         float Acceleration;
 
-        SDL_Rect pos;
+       SDL_Rect pos;
 
         SDL_Texture *up;
         SDL_Texture *down;

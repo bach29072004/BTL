@@ -28,7 +28,8 @@ struct Pipe
         top_dst.w = PIPE_WIDTH;
         top_dst.h = HEIGHT - height - PIPE_GAP;
 
-        top_src.x = top_src.y = 0;
+        top_src.x = 0;
+        top_src.y  = 0;
         top_src.w = PIPE_WIDTH_SRC;
         top_src.h = top_dst.h;
 

@@ -44,15 +44,93 @@ void Bird::update(bool jump, float elapsedTime)
 
 bool Bird::collisionDetector(Pipe *pipe,item* items)
 {
-       if(pipe->top_dst.x <= pos.x + pos.w && pipe->top_dst.x + PIPE_WIDTH >= pos.x + pos.w)
-              if(pos.y < pipe->top_dst.y + pipe->top_dst.h || pos.y + pos.h > pipe->bottom_dst.y)
-                     return true;
+       int left_bird = pos.x;
+       int right_bird = pos.x + pos.w;
+       int top_bird = pos.y;
+       int bot_bird = pos.y + pos.h;
 
-       if(pos.y + pos.h > HEIGHT - GROUND_HEIGHT)
+       int left_toppipe = pipe->top_dst.x;
+       int right_toppipe = pipe->top_dst.x + pipe->top_dst.w;
+       int top_toppipe = pipe->top_dst.y;
+       int bot_toppipe = pipe->top_dst.y + pipe->top_dst.h;
+
+       int left_botpipe = pipe->bottom_dst.x;
+       int right_botpipe = pipe->bottom_dst.x + pipe->bottom_dst.w;
+       int top_botpipe = pipe->bottom_dst.y;
+       int bot_botpipe = pipe->bottom_dst.y + pipe->bottom_dst.h;
+
+       // pipe top
+       if ( left_toppipe > left_bird && left_toppipe < right_bird)
+       {
+              if (top_toppipe > top_bird && top_toppipe < bot_bird)
+              {
+                     return true;
+              }
+       }
+
+       if ( left_toppipe > left_bird && left_toppipe < right_bird)
+       {
+              if (bot_toppipe > top_bird && bot_toppipe < bot_bird)
+              {
+                     return true;
+              }
+       }
+
+       if (right_toppipe > left_bird && right_toppipe < right_bird)
+       {
+              if (top_toppipe > top_bird && top_toppipe < bot_bird)
+              {
+                     return true;
+              }
+       }
+
+       if (right_toppipe > left_bird && right_toppipe < right_bird)
+       {
+              if (bot_toppipe > top_bird && bot_toppipe < bot_bird)
+              {
+                     return true;
+              }
+       }
+
+    //pipe bot
+    if ( left_botpipe > left_bird && left_botpipe < right_bird)
+       {
+              if (top_botpipe > top_bird && top_botpipe < bot_bird)
+              {
+                     return true;
+              }
+       }
+
+       if ( left_botpipe > left_bird && left_botpipe < right_bird)
+       {
+              if (bot_botpipe > top_bird && bot_botpipe < bot_bird)
+              {
+                     return true;
+              }
+       }
+
+       if (right_botpipe > left_bird && right_botpipe < right_bird)
+       {
+              if (top_botpipe > top_bird && top_botpipe < bot_bird)
+              {
+                     return true;
+              }
+       }
+
+       if (right_botpipe > left_bird && right_botpipe < right_bird)
+       {
+              if (bot_botpipe > top_bird && bot_botpipe < bot_bird)
+              {
+                     return true;
+              }
+       }
+
+ // gruond
+       if(bot_bird > HEIGHT - GROUND_HEIGHT)
               return true;
 
 
-       if(pos.y < 0)
+       if(top_bird < 0)
               return true;
 
        if(!pipe->passed && pipe->top_dst.x + PIPE_WIDTH < pos.x)
@@ -67,10 +145,46 @@ bool Bird::collisionDetector(Pipe *pipe,item* items)
 
     return false;
 }
+
 bool Bird::eat_item(item*_item){
-       if (pos.x +pos.w>= _item->rect_item.x &&pos.x +pos.w<=_item->rect_item.x+_item->rect_item.w ){
-              if(pos.y>=_item->rect_item.y && pos.y <=_item->rect_item.y+_item->rect_item.h){
-                     _item->eat= true;
+       int left_bird = pos.x;
+       int right_bird = pos.x + pos.w;
+       int top_bird = pos.y;
+       int bot_bird = pos.y + pos.h;
+
+       int left_item = _item->rect_item.x;
+       int right_item = _item->rect_item.x + _item->rect_item.w;
+       int top_item = _item->rect_item.y;
+       int bot_item = _item->rect_item.y + _item->rect_item.h;
+
+       if (left_bird > left_item && left_bird < right_item)
+       {
+              if (top_bird > top_item && top_bird < bot_item)
+              {
+                     return true;
+              }
+       }
+
+       if (left_bird > left_item && left_bird < right_item)
+       {
+              if (bot_bird > top_item && bot_bird < bot_item)
+              {
+              return true;
+              }
+       }
+
+       if (right_bird > left_item && right_bird < right_item)
+       {
+              if (top_bird > top_item && top_bird < bot_item)
+              {
+                     return true;
+              }
+       }
+
+       if (right_bird > left_item && right_bird < right_item)
+       {
+              if (bot_bird > top_item && bot_bird < bot_item)
+              {
                      return true;
               }
        }

@@ -18,7 +18,7 @@
 
 
 
-#define BIRD_WIDTH 60
+#define BIRD_WIDTH 50
 #define BIRD_HEIGHT 50
 
 #define PIPE_WIDTH 80
