@@ -31,7 +31,7 @@ void BaseOject::init()
        pipes.push_back(new Pipe(WIDTH * 2 + PIPE_DISTANCE, rand() % 301 + 150 ));
        pipes.push_back(new Pipe(pipes.back()->bottom_dst.x + PIPE_DISTANCE+level*40, rand() % 301 + 150));
        pipes.push_back(new Pipe(pipes.back()->bottom_dst.x + PIPE_DISTANCE+level*40, rand() % 301 + 150));
-       _item = new item(WIDTH ,rand() % 301 + 150,2);
+       _item = new item(WIDTH ,rand() % 301 + 150,rand()%2+1);
        gameStarted = false;
        gameover = false;
 
@@ -254,6 +254,15 @@ void BaseOject::update(bool jump, float elapsedTime, bool &gameover)
        //bird
        bird->update(jump, elapsedTime);
 
+       //background and speed
+       if (number_day==3 )
+              day = false;
+       if(number_day== 5){
+              day = true;
+              number_day =0;
+              level +=1;
+       }
+
        //pipe
        for(auto p : pipes)
        {
@@ -285,6 +294,7 @@ void BaseOject::update(bool jump, float elapsedTime, bool &gameover)
               int type_item =rand()%2+1;
               _item = new item(WIDTH,330,type_item);
               timed =0;
+              number_day +=1;
        }
 
        if(bird->eat_item(_item))
@@ -358,7 +368,10 @@ void BaseOject::render()
     SDL_RenderClear(grenderer);
 
     // background
-    SDL_RenderCopy(grenderer, texture_background, NULL, NULL);
+       if (day)
+              SDL_RenderCopy(grenderer, texture_background, NULL, NULL);
+       else
+              SDL_RenderCopy(grenderer, texture_background_night, NULL, NULL);
 
     //item
     _item->render_item(grenderer,texture_item[_item->type-1]);
@@ -409,6 +422,7 @@ void BaseOject::loadTextures()
      texture_noloa=IMG_LoadTexture(grenderer,"picture/noloa.png");
        texture_back= IMG_LoadTexture(grenderer,"picture/back.png");
        texture_flag = IMG_LoadTexture(grenderer,"picture/flag.png");
+       texture_background_night = IMG_LoadTexture(grenderer,"picture/background_night.png");
 
     for(int i = 0; i < 10; i++)
     {

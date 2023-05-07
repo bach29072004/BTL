@@ -28,9 +28,12 @@ class BaseOject
         bool paused = false;
         int level=0;
         float timed =0;
+        bool day = true;
+        int number_day=0;
 
 
         SDL_Texture *texture_background;
+        SDL_Texture *texture_background_night;
         SDL_Texture *texture_ground;
         SDL_Texture *texture_pipe;
         SDL_Texture *texture_numbers[20];

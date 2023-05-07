@@ -87,7 +87,7 @@
 	"Pipe.h"
 	"Commonfuntion.h"
 
-1683386077 source:e:\download\bach\game\baseobject.cpp
+1683474320 source:e:\download\bach\game\baseobject.cpp
 	"BaseObject.h"
 	"Bird.cpp"
 	<bits/stdc++.h>
@@ -117,17 +117,17 @@
 	<fstream>
 	<algorithm>
 
-1681284076 source:e:\download\bach\game\main.cpp
+1683386236 source:e:\download\bach\game\main.cpp
 	"Commonfuntion.h"
 	"BaseObject.h"
 
-1683386236 e:\download\bach\game\baseobject.h
+1683474105 e:\download\bach\game\baseobject.h
 	"Bird.h"
 	"Pipe.h"
 	"Commonfuntion.h"
 	"item.h"
 
-1683366481 e:\download\bach\game\bird.cpp
+1683473011 e:\download\bach\game\bird.cpp
 	"Bird.h"
 	<bits/stdc++.h>
 
