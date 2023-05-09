@@ -16,21 +16,21 @@ class Bird
 
        SDL_Rect pos;
 
-        SDL_Texture *up;
-        SDL_Texture *down;
-        SDL_Texture *mid;
+        SDL_Texture *bird_up;
+        SDL_Texture *bird_down;
+        SDL_Texture *bird_mid;
         SDL_Texture* birdeat;
         SDL_Texture* birdeatx2;
         SDL_Texture *CurrentRenderingTexture;
         SDL_Renderer *renderer;
 
-        int Animation_Frames;
+        int frames;
 
 
     public:
 
         int score;
-       bool pause = false;
+       int flag =0;
         Mix_Chunk* scoreSound = Mix_LoadWAV("score.wav");
         Bird(SDL_Texture *up, SDL_Texture *mid, SDL_Texture *down, SDL_Texture*birdeat, SDL_Texture*birdeatx2, SDL_Renderer *renderer);
         int getScore()

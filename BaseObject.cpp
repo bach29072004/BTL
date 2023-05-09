@@ -31,7 +31,7 @@ void BaseOject::init()
        pipes.push_back(new Pipe(WIDTH * 2 + PIPE_DISTANCE, rand() % 301 + 150 ));
        pipes.push_back(new Pipe(pipes.back()->bottom_dst.x + PIPE_DISTANCE+level*40, rand() % 301 + 150));
        pipes.push_back(new Pipe(pipes.back()->bottom_dst.x + PIPE_DISTANCE+level*40, rand() % 301 + 150));
-       _item = new item(WIDTH ,rand() % 301 + 150,rand()%2+1);
+       _item = new item(WIDTH ,rand() % 301 + 150,rand()%3+1);
        gameStarted = false;
        gameover = false;
 
@@ -208,8 +208,6 @@ void BaseOject::Start()
                      }
               }
               if(event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE){
-                     paused =true;
-                     bird->pause =true;
                      pause();
               }
        }
@@ -228,7 +226,6 @@ void BaseOject::Start()
                      update(jump, dt.count(), gameover);
                      timed = timed + dt.count();
                      _item->time_dis = _item->time_dis - dt.count();
-                     cout << timed << endl;
               }
             if(gameover)
                 {
@@ -240,11 +237,19 @@ void BaseOject::Start()
     Close();
 }
 void BaseOject::pause(){
+       paused =true;
+       Mix_Pause(-1);
+       Mix_PausedMusic();
        while (paused){
               while (SDL_PollEvent(&event)){
+                     if(event.type == SDL_QUIT)
+                     {
+                            paused = false;
+                            Running = false;
+                     }
                      if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE){
                             paused = false;
-                            bird->pause =false;
+                            bird->flag++;
                             return;
                      }
               }
@@ -268,18 +273,18 @@ void BaseOject::update(bool jump, float elapsedTime, bool &gameover)
        }
 
        //pipe
-       for(auto p : pipes)
+       for(auto pip : pipes)
        {
-              p->bottom_dst.x -= (PIPE_V+level);
-              p->top_dst.x = p->bottom_dst.x;
+              pip->bottom_dst.x -= (PIPE_V+level);
+              pip->top_dst.x = pip->bottom_dst.x;
 
-       if(p->bottom_dst.x + p->bottom_dst.w < 0)
+       if(pip->bottom_dst.x + pip->bottom_dst.w < 0)
        {
               pipes.pop_front();
               pipes.push_back(new Pipe(pipes.back()->bottom_dst.x + PIPE_DISTANCE+level*40, rand() % 301 + 150));
        }
 
-       if(bird->collisionDetector(p,_item) )
+       if(bird->collisionDetector(pip,_item) )
               gameover = true;
        }
        if (_item->eat ==true && _item->type ==1 && _item->time_dis >0){
@@ -295,8 +300,7 @@ void BaseOject::update(bool jump, float elapsedTime, bool &gameover)
 
        if(timed >=TIME_SPAWN_ITEM)
        {
-              int type_item =rand()%3+1;
-              _item = new item(WIDTH,330,type_item);
+              _item = new item(WIDTH,rand()%301+150,rand()%3+1);
               timed =0;
               number_day +=1;
        }
@@ -358,6 +362,8 @@ void BaseOject::gameOver()
         {
             tmpMusic = 0;
             firstTime = true;
+            timed =0;
+            number_day =0;
             Start();
         }
     else
@@ -421,7 +427,7 @@ void BaseOject::loadTextures()
     texture_bird_eat2 = IMG_LoadTexture(grenderer,"picture/dogx2.png");
     texture_item[0] = IMG_LoadTexture(grenderer, "picture/item.png");
      texture_item[1] =IMG_LoadTexture(grenderer,"picture/itemx2.png");
-     texture_item[2]= IMG_LoadTexture(grenderer,"picture/small.png");
+     texture_item[2] = IMG_LoadTexture(grenderer,"picture/small.png");
      texture_level = IMG_LoadTexture(grenderer,"picture/level.png");
      texture_loa = IMG_LoadTexture(grenderer,"picture/loa.png");
      texture_noloa=IMG_LoadTexture(grenderer,"picture/noloa.png");

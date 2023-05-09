@@ -34,7 +34,7 @@
 #define GROUND_WIDTH 300
 
 #define TIME_SPAWN_ITEM 15
-#define TIME_ITEM_OVER 9
+#define TIME_ITEM_OVER 8
 
 #define GRAVITY 90.0f
 
