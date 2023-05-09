@@ -21,10 +21,15 @@ Bird::Bird(SDL_Texture *up, SDL_Texture *mid, SDL_Texture *down, SDL_Texture*bir
 {
        init();
 }
-
+void Bird::velocitywhenpause(){
+       Velocity =0;
+}
 void Bird::update(bool jump, float elapsedTime)
 {
-    elapsedTime *= 5;
+       if (pause) {
+              elapsedTime =0;
+       }
+       elapsedTime *= 5;
     if(jump)
     {
         Acceleration = 0.0f;
@@ -192,6 +197,14 @@ bool Bird::eat_item(item*_item){
 }
 void Bird::render(item* _item)
 {
+       if (_item->eat==true && _item->type==3){
+              pos.w = BIRD_WIDTH/2;
+              pos.h = BIRD_HEIGHT/2;
+       }
+       else {
+              pos.w = BIRD_WIDTH;
+              pos.h = BIRD_HEIGHT;
+       }
        animation();
        if (_item->eat ==false)
        {
@@ -207,8 +220,10 @@ void Bird::render(item* _item)
        else{
               if (_item->type==1)
                      SDL_RenderCopy(renderer,birdeat,NULL,&pos);
-              else
+              else if (_item->type==2)
                      SDL_RenderCopy(renderer,birdeatx2,NULL,&pos);
+              else if (_item->type==3)
+                     SDL_RenderCopy(renderer,mid , NULL,&pos );
        }
 }
 

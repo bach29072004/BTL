@@ -209,11 +209,10 @@ void BaseOject::Start()
               }
               if(event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE){
                      paused =true;
+                     bird->pause =true;
                      pause();
               }
        }
-
-
 
         if(frameDelay > dt.count())
               SDL_Delay(frameDelay - dt.count());
@@ -225,10 +224,12 @@ void BaseOject::Start()
                      Mix_Pause(-1);
                      Mix_PauseMusic();
                }
-            update(jump, dt.count(), gameover);
-            timed = timed + dt.count();
-            _item->time_dis = _item->time_dis - dt.count();
-            cout << timed << endl;
+              if (paused ==false){
+                     update(jump, dt.count(), gameover);
+                     timed = timed + dt.count();
+                     _item->time_dis = _item->time_dis - dt.count();
+                     cout << timed << endl;
+              }
             if(gameover)
                 {
                     gameOver();
@@ -243,6 +244,7 @@ void BaseOject::pause(){
               while (SDL_PollEvent(&event)){
                      if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE){
                             paused = false;
+                            bird->pause =false;
                             return;
                      }
               }
@@ -252,6 +254,8 @@ void BaseOject::pause(){
 void BaseOject::update(bool jump, float elapsedTime, bool &gameover)
 {
        //bird
+       if (paused ==true )
+              bird->velocitywhenpause();
        bird->update(jump, elapsedTime);
 
        //background and speed
@@ -291,7 +295,7 @@ void BaseOject::update(bool jump, float elapsedTime, bool &gameover)
 
        if(timed >=TIME_SPAWN_ITEM)
        {
-              int type_item =rand()%2+1;
+              int type_item =rand()%3+1;
               _item = new item(WIDTH,330,type_item);
               timed =0;
               number_day +=1;
@@ -417,6 +421,7 @@ void BaseOject::loadTextures()
     texture_bird_eat2 = IMG_LoadTexture(grenderer,"picture/dogx2.png");
     texture_item[0] = IMG_LoadTexture(grenderer, "picture/item.png");
      texture_item[1] =IMG_LoadTexture(grenderer,"picture/itemx2.png");
+     texture_item[2]= IMG_LoadTexture(grenderer,"picture/small.png");
      texture_level = IMG_LoadTexture(grenderer,"picture/level.png");
      texture_loa = IMG_LoadTexture(grenderer,"picture/loa.png");
      texture_noloa=IMG_LoadTexture(grenderer,"picture/noloa.png");

@@ -42,7 +42,7 @@ class BaseOject
         SDL_Texture *texture_bird_Mid;
         SDL_Texture *texture_bird_Down;
        SDL_Texture *texture_play;
-       SDL_Texture*texture_item[2];
+       SDL_Texture*texture_item[3];
        SDL_Texture * texture_option;
        SDL_Texture* texture_hightscore;
        SDL_Texture* texture_bird_eat;

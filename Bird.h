@@ -30,6 +30,7 @@ class Bird
     public:
 
         int score;
+       bool pause = false;
         Mix_Chunk* scoreSound = Mix_LoadWAV("score.wav");
         Bird(SDL_Texture *up, SDL_Texture *mid, SDL_Texture *down, SDL_Texture*birdeat, SDL_Texture*birdeatx2, SDL_Renderer *renderer);
         int getScore()
@@ -42,6 +43,7 @@ class Bird
         void animation();
         bool collisionDetector(Pipe *pipe, item*items);
         bool eat_item(item*_item);
+        void velocitywhenpause();
 };
 
 #endif // BIRD_H_INCLUDED
